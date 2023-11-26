@@ -1,12 +1,13 @@
 #include "builtin.h"
+
 #include "history.h"
 #include "parse.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <wordexp.h>
 #include <unistd.h>
+#include <wordexp.h>
 
 int get_internal_command(char **args) {
     if (strcmp(args[0], "cd") == 0) {

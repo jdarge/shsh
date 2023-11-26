@@ -1,8 +1,8 @@
 #ifndef INPUT_H_SHSH
 #define INPUT_H_SHSH
 
-#include "history.h"
 #include "env.h"
+#include "history.h"
 
 #include <pthread.h>
 

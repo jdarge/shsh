@@ -1,15 +1,16 @@
 #include "input.h"
-#include "defs.h"
-#include "history.h"
-#include "env.h"
 
+#include "defs.h"
+#include "env.h"
+#include "history.h"
+
+#include <dirent.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <pthread.h>
 #include <termios.h>
 #include <unistd.h>
-#include <dirent.h>
 
 volatile int ctrl_c_pressed = 0;
 pthread_t input_thread;

@@ -1,16 +1,17 @@
 #include "exec.h"
-#include "history.h"
+
 #include "builtin.h"
 #include "defs.h"
+#include "history.h"
 #include "parse.h"
 
+#include <fcntl.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <fcntl.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 int shsh_execute(char **args, History* h) {
 
