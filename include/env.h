@@ -2,8 +2,8 @@
 #define ENV_H_SHSH
 
 typedef struct PATH {
-    char* full;
-    char** parsed;
+    char *full;
+    char **parsed;
     unsigned int parsed_count;
 } PATH;
 

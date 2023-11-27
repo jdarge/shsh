@@ -3,8 +3,6 @@
 #include <string.h>
 #include <signal.h>
 
-#include "builtin.h"
-#include "defs.h"
 #include "env.h"
 #include "exec.h"
 #include "history.h"
@@ -26,9 +24,9 @@ int main(void) {
     char *new_path = malloc(strlen(current_path) + strlen(additional_path) + 2);
     sprintf(new_path, "%s:%s", current_path, additional_path);
     */
-    env = (ENV*) malloc(sizeof(ENV));
-    env->path = (PATH*) malloc(sizeof(PATH));
-    env->path->full = (char*) malloc(sizeof(char) * 256);
+    env = (ENV *) malloc(sizeof(ENV));
+    env->path = (PATH *) malloc(sizeof(PATH));
+    env->path->full = (char *) malloc(sizeof(char) * 256);
     strcpy(env->path->full, "/usr/local/bin:/usr/bin:/bin");
     parse_env_path(env);
 
@@ -36,7 +34,7 @@ int main(void) {
     TODO: obviously needs to be reworked 
     set up history block
     */
-    History* h = history_init_block();
+    History *h = history_init_block();
 
     do {
 
@@ -58,9 +56,10 @@ int main(void) {
             printf("\n");
     } while (status);
 
-    for (int i = 0; i < h->history_idx; i++) {
+    for (int i = 0; i <= h->history_idx; i++) {
         free(h->history_list[i]);
-    } free(h);
+    }
+    free(h);
 
     return 0;
 }

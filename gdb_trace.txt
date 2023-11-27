@@ -1,0 +1,21 @@
++bt
+#0  0x00007ffff7f03c8d in ?? () from /usr/lib/libc.so.6
+#1  0x0000555555556286 in read_line (b=0x0, p=0, env=0x55555555a2a0, h=0x55555555a4a0) at /home/crtg/Desktop/shsh/src/input.c:97
+#2  0x00005555555554c4 in main () at /home/crtg/Desktop/shsh/driver.c:49
+
++bt full
+#0  0x00007ffff7f03c8d in ?? () from /usr/lib/libc.so.6
+No symbol table info available.
+#1  0x0000555555556286 in read_line (b=0x0, p=0, env=0x55555555a2a0, h=0x55555555a4a0) at /home/crtg/Desktop/shsh/src/input.c:97
+        arrow_key = 66
+        buffsize = 1024
+        position = 2
+        buffer = 0x55555555a940 "ls"
+        c = 27
+        local_history_idx = 5
+#2  0x00005555555554c4 in main () at /home/crtg/Desktop/shsh/driver.c:49
+        line = 0x55555555a940 "ls"
+        args = 0x55555555ae70
+        status = 1
+        h = 0x55555555a4a0
+

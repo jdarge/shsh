@@ -65,26 +65,26 @@ char *concatenate_strings(char **args) {
     return result;
 }
 
-void parse_env_path(ENV* env) {
+void parse_env_path(ENV *env) {
     // WILL allocate memory for parsed paths
     // WILL update PATH parsed_count
 
-    char* full = env->path->full;
+    char *full = env->path->full;
 
-    char* lp = (char*) malloc(sizeof(char) * strlen(env->path->full) + 1);
+    char *lp = (char *) malloc(sizeof(char) * strlen(env->path->full) + 1);
     strcpy(lp, full);
 
     int index = 0;
-    for(int i = 0; i < (int) strlen(lp); i++) 
-        if(lp[i] == ':')
+    for (int i = 0; i < (int) strlen(lp); i++)
+        if (lp[i] == ':')
             index++;
 
-    char **parsed_paths = (char **)malloc(sizeof(char *) * index);
+    char **parsed_paths = (char **) malloc(sizeof(char *) * index);
 
     int i = 0;
-    char* token = strtok(lp, ":");
+    char *token = strtok(lp, ":");
     while (token != NULL) {
-        parsed_paths[i] = (char *)malloc(strlen(token) + 1);
+        parsed_paths[i] = (char *) malloc(strlen(token) + 1);
         strcpy(parsed_paths[i], token);
         i++;
         token = strtok(NULL, ":");

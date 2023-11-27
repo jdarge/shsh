@@ -17,14 +17,14 @@ extern volatile int ctrl_c_pressed;
 
 extern pthread_t input_thread;
 
-char *read_line(char* b, int p, ENV* env, History* h);
+char *read_line(char *b, int p, ENV *env, History *h);
 
-int get_char();
+int get_char(void);
 
 void ctrlC_handler(int signum);
 
 void *input_thread_function(void *arg);
 
-char *tab_completion(char *partial_input, int pos, ENV* env);
+char *tab_completion(char *partial_input, int pos, ENV *env);
 
 #endif

@@ -4,11 +4,11 @@
 #define HISTORY_SIZE 100
 
 typedef struct History {
-    char** history_list;
+    char **history_list;
     int history_idx;
 } History;
 
-History* history_init_block();
+History *history_init_block();
 
 /*
 

@@ -13,6 +13,6 @@ void cd_home();
 
 int cd(char **args);
 
-char** double_bang(History* h);
+char **double_bang(History *h);
 
 #endif

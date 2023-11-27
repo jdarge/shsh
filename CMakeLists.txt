@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.24.2)
 
 # Setting a variable to use for both the project name and the resulting binary executable
 set(REPO shsh)
@@ -11,7 +11,7 @@ set(PROJECT_NAME ${REPO})
 set(CMAKE_C_STANDARD 99)
 
 # Compiler flags
-set(CPP_FLAGS "-Wall -Wextra -pedantic")
+set(CPP_FLAGS "-Wall -Wextra -pedantic -ggdb")
 
 
 

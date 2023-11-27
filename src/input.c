@@ -15,24 +15,24 @@
 volatile int ctrl_c_pressed = 0;
 pthread_t input_thread;
 
-char *read_line(char* b, int p, ENV* env, History* h) {
+char *read_line(char *b, int p, ENV *env, History *h) {
 
     int buffsize = 1024;
     int position = 0;
-    char* buffer;
+    char *buffer;
     int c;
     int local_history_idx = h->history_idx;
 
-    if(b) {
+    if (b) {
         buffer = b;
         position = p;
 
         printf("\n");
-        if (system("pwd")){
+        if (system("pwd")) {
             free(buffer);
             return NULL;
         }
-        printf("> %s",buffer);
+        printf("> %s", buffer);
 
     } else {
         buffer = malloc(sizeof(char) * buffsize);
@@ -47,6 +47,8 @@ char *read_line(char* b, int p, ENV* env, History* h) {
 
     while (1) {
 
+        pthread_join(input_thread, NULL);
+
         if (ctrl_c_pressed) {
             pthread_cancel(input_thread);
             ctrl_c_pressed = 0;
@@ -58,8 +60,6 @@ char *read_line(char* b, int p, ENV* env, History* h) {
             free(buffer);
             return NULL;
         }
-
-        pthread_join(input_thread, NULL);
 
         if (c == '\t') { // TODO!!!! need to use finish tab_comp and use char* comp
             char *completion = tab_completion(buffer, position, env);
@@ -73,33 +73,38 @@ char *read_line(char* b, int p, ENV* env, History* h) {
             buffer[position] = '\0';
             printf("\n");
             return buffer;
-        } else if (c == 27 && get_char() == 91) { // check for ^/v arrow keys
+        } else if (c == 27 && get_char() == 91) {
             int arrow_key = get_char();
-            if (arrow_key == UP_ARROW) { // TODO arrow key -> ctrlc -> sigsegv
-                for (int i = 0; i < position; i++) {
-                    printf("\b \b");
-                }
-                if (local_history_idx > 0) {
-                    local_history_idx--;
-                    strcpy(buffer, h->history_list[local_history_idx]);
+            if (arrow_key == UP_ARROW) {
+                if (local_history_idx - 1 >= 0) {
+                    for (int i = 0; i < position; i++) {
+                        printf("\b \b");
+                    }
+
+                    strcpy(buffer, h->history_list[--local_history_idx]);
                     position = (int) strlen(buffer);
                     printf("\r> %s", buffer);
-                } else {
-                    buffer[0] = '\0';
-                    position = 0;
-                    printf("\r> ");
                 }
-            } else if (arrow_key == DOWN_ARROW) { // todo
-            } else if (arrow_key == RIGHT_ARROW) { // todo
-                if ((int) strlen(buffer) > position) {
-                    // advance one position
+            } else if (arrow_key == DOWN_ARROW) {
+                if (local_history_idx + 1 <= h->history_idx - 1) {
+                    for (int i = 0; i < position; i++) {
+                        printf("\b \b");
+                    }
+
+                    strcpy(buffer, h->history_list[++local_history_idx]);
+                    position = (int) strlen(buffer);
+                    printf("\r> %s", buffer);
+                }
+            } else if (arrow_key == RIGHT_ARROW) {//TODO
+                if (position + 1 <= (int) strlen(buffer)) {
                     printf("\033[1C");
                     position++;
                 }
-            } else if (arrow_key == LEFT_ARROW) { // todo
-                // decrement one position
-                printf("\033[1D");
-                position--;
+            } else if (arrow_key == LEFT_ARROW) {//TODO
+                if (position - 1 >= 0) {
+                    printf("\033[1D");
+                    position--;
+                }
             }
         } else if (c == BACKSPACE) {
             if (position > 0) {
@@ -131,7 +136,7 @@ char *read_line(char* b, int p, ENV* env, History* h) {
     }
 }
 
-int get_char() {
+int get_char(void) {
     int ch;
     struct termios oldt, newt;
     tcgetattr(STDIN_FILENO, &oldt);
@@ -160,7 +165,7 @@ void *input_thread_function(void *arg) {
     return NULL;
 }
 
-char *tab_completion(char *partial_input, int pos, ENV* env) {
+char *tab_completion(char *partial_input, int pos, ENV *env) {
 
     /*
 
@@ -221,7 +226,8 @@ char *tab_completion(char *partial_input, int pos, ENV* env) {
         show bin context
     */
     // printf("\n:%s:", partial_input);
-    (void) env; (void) pos;
+    (void) env;
+    (void) pos;
 
     DIR *dir;
     struct dirent *ent;

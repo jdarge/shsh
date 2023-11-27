@@ -10,6 +10,6 @@ char **split_line(char *line);
 
 char *concatenate_strings(char **args);
 
-void parse_env_path(ENV* env);
+void parse_env_path(ENV *env);
 
 #endif

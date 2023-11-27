@@ -62,7 +62,7 @@ int cd(char **args) {
     return CD;
 }
 
-char** double_bang(History* h) {
+char **double_bang(History *h) {
     if (h->history_idx != 0)
         return split_line(h->history_list[h->history_idx - 1]);
 
