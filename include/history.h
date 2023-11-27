@@ -8,7 +8,7 @@ typedef struct History {
     int history_idx;
 } History;
 
-History *history_init_block();
+History *history_init_block(void);
 
 /*
 

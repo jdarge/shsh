@@ -21,7 +21,7 @@ int get_internal_command(char **args) {
     return 0;
 }
 
-void cd_home() {
+void cd_home(void) {
     const char *home = getenv("HOME");
     if (!home) {
         printf("The HOME environment variable is not set.\n");

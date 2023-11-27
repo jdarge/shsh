@@ -9,7 +9,7 @@
 
 int get_internal_command(char **args);
 
-void cd_home();
+void cd_home(void);
 
 int cd(char **args);
 
