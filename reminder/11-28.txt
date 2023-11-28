@@ -1,0 +1,843 @@
+==642870== Memcheck, a memory error detector
+==642870== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==642870== Using Valgrind-3.21.0 and LibVEX; rerun with -h for copyright info
+==642870== Command: ./build/bin/shsh
+==642870== Parent PID: 642827
+==642870== 
+==642870== Invalid write of size 8
+==642870==    at 0x10C1A2: parse_env_path (parse.c:87)
+==642870==    by 0x10A474: main (driver.c:34)
+==642870==  Address 0x4a6f298 is 0 bytes after a block of size 8 alloc'd
+==642870==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642870==    by 0x10C14C: parse_env_path (parse.c:82)
+==642870==    by 0x10A474: main (driver.c:34)
+==642870== 
+==642870== Invalid read of size 8
+==642870==    at 0x10C1B9: parse_env_path (parse.c:88)
+==642870==    by 0x10A474: main (driver.c:34)
+==642870==  Address 0x4a6f298 is 0 bytes after a block of size 8 alloc'd
+==642870==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642870==    by 0x10C14C: parse_env_path (parse.c:82)
+==642870==    by 0x10A474: main (driver.c:34)
+==642870== 
+==642870== Invalid read of size 8
+==642870==    at 0x10A4A8: main (driver.c:38)
+==642870==  Address 0x4a6f298 is 0 bytes after a block of size 8 alloc'd
+==642870==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642870==    by 0x10C14C: parse_env_path (parse.c:82)
+==642870==    by 0x10A474: main (driver.c:34)
+==642870== 
+==642921== 
+==642921== HEAP SUMMARY:
+==642921==     in use at exit: 25,278,072 bytes in 24,508 blocks
+==642921==   total heap usage: 24,517 allocs, 9 frees, 25,347,552 bytes allocated
+==642921== 
+==642921== 3 bytes in 1 blocks are still reachable in loss record 1 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10BFFC: concatenate_strings (parse.c:52)
+==642921==    by 0x10AD7C: shsh_execute (exec.c:25)
+==642921==    by 0x10A581: main (driver.c:57)
+==642921== 
+==642921== 8 bytes in 1 blocks are still reachable in loss record 2 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10A3FB: main (driver.c:29)
+==642921== 
+==642921== 8 bytes in 1 blocks are still reachable in loss record 3 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10C14C: parse_env_path (parse.c:82)
+==642921==    by 0x10A474: main (driver.c:34)
+==642921== 
+==642921== 9 bytes in 1 blocks are definitely lost in loss record 4 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10C1A1: parse_env_path (parse.c:87)
+==642921==    by 0x10A474: main (driver.c:34)
+==642921== 
+==642921== 15 bytes in 1 blocks are still reachable in loss record 5 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10C1A1: parse_env_path (parse.c:87)
+==642921==    by 0x10A474: main (driver.c:34)
+==642921== 
+==642921== 16 bytes in 1 blocks are still reachable in loss record 6 of 19
+==642921==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==642921==    by 0x10AB5C: dtrie_insert_directory (dtrie.c:48)
+==642921==    by 0x10A4C2: main (driver.c:38)
+==642921== 
+==642921== 16 bytes in 1 blocks are still reachable in loss record 7 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10B47F: history_init_block (history.c:8)
+==642921==    by 0x10A4DD: main (driver.c:44)
+==642921== 
+==642921== 24 bytes in 1 blocks are still reachable in loss record 8 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10A9D5: dtrie_init (dtrie.c:12)
+==642921==    by 0x10A483: main (driver.c:36)
+==642921== 
+==642921== 24 bytes in 2 blocks are still reachable in loss record 9 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10ABA2: dtrie_insert_directory (dtrie.c:49)
+==642921==    by 0x10A4C2: main (driver.c:38)
+==642921== 
+==642921== 32 bytes in 1 blocks are still reachable in loss record 10 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10A413: main (driver.c:30)
+==642921== 
+==642921== 40 bytes in 1 blocks are still reachable in loss record 11 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10C231: trie_init (trie.c:9)
+==642921==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642921==    by 0x10A483: main (driver.c:36)
+==642921== 
+==642921== 100 bytes in 1 blocks are still reachable in loss record 12 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10B48D: history_init_block (history.c:9)
+==642921==    by 0x10A4DD: main (driver.c:44)
+==642921== 
+==642921== 256 bytes in 1 blocks are still reachable in loss record 13 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10A42A: main (driver.c:31)
+==642921== 
+==642921== 257 bytes in 1 blocks are still reachable in loss record 14 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10C23F: trie_init (trie.c:11)
+==642921==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642921==    by 0x10A483: main (driver.c:36)
+==642921== 
+==642921== 512 bytes in 1 blocks are still reachable in loss record 15 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10BE55: split_line (parse.c:15)
+==642921==    by 0x10A56A: main (driver.c:56)
+==642921== 
+==642921== 1,024 bytes in 1 blocks are still reachable in loss record 16 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10B629: read_line (input.c:44)
+==642921==    by 0x10A55A: main (driver.c:55)
+==642921== 
+==642921== 1,032 bytes in 1 blocks are still reachable in loss record 17 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10C316: trie_node_create (trie.c:35)
+==642921==    by 0x10C29F: trie_init (trie.c:20)
+==642921==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642921==    by 0x10A483: main (driver.c:36)
+==642921== 
+==642921== 2,048 bytes in 1 blocks are still reachable in loss record 18 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10C279: trie_init (trie.c:16)
+==642921==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642921==    by 0x10A483: main (driver.c:36)
+==642921== 
+==642921== 25,272,648 bytes in 24,489 blocks are still reachable in loss record 19 of 19
+==642921==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642921==    by 0x10C316: trie_node_create (trie.c:35)
+==642921==    by 0x10C3D1: trie_insert (trie.c:58)
+==642921==    by 0x10AAFC: dtrie_insert_directory (dtrie.c:37)
+==642921==    by 0x10A4C2: main (driver.c:38)
+==642921== 
+==642921== LEAK SUMMARY:
+==642921==    definitely lost: 9 bytes in 1 blocks
+==642921==    indirectly lost: 0 bytes in 0 blocks
+==642921==      possibly lost: 0 bytes in 0 blocks
+==642921==    still reachable: 25,278,063 bytes in 24,507 blocks
+==642921==         suppressed: 0 bytes in 0 blocks
+==642921== 
+==642921== For lists of detected and suppressed errors, rerun with: -s
+==642921== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
+==642925== 
+==642925== HEAP SUMMARY:
+==642925==     in use at exit: 25,278,075 bytes in 24,509 blocks
+==642925==   total heap usage: 24,520 allocs, 11 frees, 25,349,091 bytes allocated
+==642925== 
+==642925== 6 bytes in 2 blocks are still reachable in loss record 1 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10BFFC: concatenate_strings (parse.c:52)
+==642925==    by 0x10AD7C: shsh_execute (exec.c:25)
+==642925==    by 0x10A581: main (driver.c:57)
+==642925== 
+==642925== 8 bytes in 1 blocks are still reachable in loss record 2 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10A3FB: main (driver.c:29)
+==642925== 
+==642925== 8 bytes in 1 blocks are still reachable in loss record 3 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10C14C: parse_env_path (parse.c:82)
+==642925==    by 0x10A474: main (driver.c:34)
+==642925== 
+==642925== 9 bytes in 1 blocks are definitely lost in loss record 4 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10C1A1: parse_env_path (parse.c:87)
+==642925==    by 0x10A474: main (driver.c:34)
+==642925== 
+==642925== 15 bytes in 1 blocks are still reachable in loss record 5 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10C1A1: parse_env_path (parse.c:87)
+==642925==    by 0x10A474: main (driver.c:34)
+==642925== 
+==642925== 16 bytes in 1 blocks are still reachable in loss record 6 of 19
+==642925==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==642925==    by 0x10AB5C: dtrie_insert_directory (dtrie.c:48)
+==642925==    by 0x10A4C2: main (driver.c:38)
+==642925== 
+==642925== 16 bytes in 1 blocks are still reachable in loss record 7 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10B47F: history_init_block (history.c:8)
+==642925==    by 0x10A4DD: main (driver.c:44)
+==642925== 
+==642925== 24 bytes in 1 blocks are still reachable in loss record 8 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10A9D5: dtrie_init (dtrie.c:12)
+==642925==    by 0x10A483: main (driver.c:36)
+==642925== 
+==642925== 24 bytes in 2 blocks are still reachable in loss record 9 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10ABA2: dtrie_insert_directory (dtrie.c:49)
+==642925==    by 0x10A4C2: main (driver.c:38)
+==642925== 
+==642925== 32 bytes in 1 blocks are still reachable in loss record 10 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10A413: main (driver.c:30)
+==642925== 
+==642925== 40 bytes in 1 blocks are still reachable in loss record 11 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10C231: trie_init (trie.c:9)
+==642925==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642925==    by 0x10A483: main (driver.c:36)
+==642925== 
+==642925== 100 bytes in 1 blocks are still reachable in loss record 12 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10B48D: history_init_block (history.c:9)
+==642925==    by 0x10A4DD: main (driver.c:44)
+==642925== 
+==642925== 256 bytes in 1 blocks are still reachable in loss record 13 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10A42A: main (driver.c:31)
+==642925== 
+==642925== 257 bytes in 1 blocks are still reachable in loss record 14 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10C23F: trie_init (trie.c:11)
+==642925==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642925==    by 0x10A483: main (driver.c:36)
+==642925== 
+==642925== 512 bytes in 1 blocks are still reachable in loss record 15 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10BE55: split_line (parse.c:15)
+==642925==    by 0x10A56A: main (driver.c:56)
+==642925== 
+==642925== 1,024 bytes in 1 blocks are still reachable in loss record 16 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10B629: read_line (input.c:44)
+==642925==    by 0x10A55A: main (driver.c:55)
+==642925== 
+==642925== 1,032 bytes in 1 blocks are still reachable in loss record 17 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10C316: trie_node_create (trie.c:35)
+==642925==    by 0x10C29F: trie_init (trie.c:20)
+==642925==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642925==    by 0x10A483: main (driver.c:36)
+==642925== 
+==642925== 2,048 bytes in 1 blocks are still reachable in loss record 18 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10C279: trie_init (trie.c:16)
+==642925==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642925==    by 0x10A483: main (driver.c:36)
+==642925== 
+==642925== 25,272,648 bytes in 24,489 blocks are still reachable in loss record 19 of 19
+==642925==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642925==    by 0x10C316: trie_node_create (trie.c:35)
+==642925==    by 0x10C3D1: trie_insert (trie.c:58)
+==642925==    by 0x10AAFC: dtrie_insert_directory (dtrie.c:37)
+==642925==    by 0x10A4C2: main (driver.c:38)
+==642925== 
+==642925== LEAK SUMMARY:
+==642925==    definitely lost: 9 bytes in 1 blocks
+==642925==    indirectly lost: 0 bytes in 0 blocks
+==642925==      possibly lost: 0 bytes in 0 blocks
+==642925==    still reachable: 25,278,066 bytes in 24,508 blocks
+==642925==         suppressed: 0 bytes in 0 blocks
+==642925== 
+==642925== For lists of detected and suppressed errors, rerun with: -s
+==642925== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
+==642934== 
+==642934== HEAP SUMMARY:
+==642934==     in use at exit: 25,278,075 bytes in 24,509 blocks
+==642934==   total heap usage: 24,523 allocs, 14 frees, 25,350,630 bytes allocated
+==642934== 
+==642934== 6 bytes in 2 blocks are still reachable in loss record 1 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10BFFC: concatenate_strings (parse.c:52)
+==642934==    by 0x10AD7C: shsh_execute (exec.c:25)
+==642934==    by 0x10A581: main (driver.c:57)
+==642934== 
+==642934== 8 bytes in 1 blocks are still reachable in loss record 2 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10A3FB: main (driver.c:29)
+==642934== 
+==642934== 8 bytes in 1 blocks are still reachable in loss record 3 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10C14C: parse_env_path (parse.c:82)
+==642934==    by 0x10A474: main (driver.c:34)
+==642934== 
+==642934== 9 bytes in 1 blocks are definitely lost in loss record 4 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10C1A1: parse_env_path (parse.c:87)
+==642934==    by 0x10A474: main (driver.c:34)
+==642934== 
+==642934== 15 bytes in 1 blocks are still reachable in loss record 5 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10C1A1: parse_env_path (parse.c:87)
+==642934==    by 0x10A474: main (driver.c:34)
+==642934== 
+==642934== 16 bytes in 1 blocks are still reachable in loss record 6 of 19
+==642934==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==642934==    by 0x10AB5C: dtrie_insert_directory (dtrie.c:48)
+==642934==    by 0x10A4C2: main (driver.c:38)
+==642934== 
+==642934== 16 bytes in 1 blocks are still reachable in loss record 7 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10B47F: history_init_block (history.c:8)
+==642934==    by 0x10A4DD: main (driver.c:44)
+==642934== 
+==642934== 24 bytes in 1 blocks are still reachable in loss record 8 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10A9D5: dtrie_init (dtrie.c:12)
+==642934==    by 0x10A483: main (driver.c:36)
+==642934== 
+==642934== 24 bytes in 2 blocks are still reachable in loss record 9 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10ABA2: dtrie_insert_directory (dtrie.c:49)
+==642934==    by 0x10A4C2: main (driver.c:38)
+==642934== 
+==642934== 32 bytes in 1 blocks are still reachable in loss record 10 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10A413: main (driver.c:30)
+==642934== 
+==642934== 40 bytes in 1 blocks are still reachable in loss record 11 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10C231: trie_init (trie.c:9)
+==642934==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642934==    by 0x10A483: main (driver.c:36)
+==642934== 
+==642934== 100 bytes in 1 blocks are still reachable in loss record 12 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10B48D: history_init_block (history.c:9)
+==642934==    by 0x10A4DD: main (driver.c:44)
+==642934== 
+==642934== 256 bytes in 1 blocks are still reachable in loss record 13 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10A42A: main (driver.c:31)
+==642934== 
+==642934== 257 bytes in 1 blocks are still reachable in loss record 14 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10C23F: trie_init (trie.c:11)
+==642934==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642934==    by 0x10A483: main (driver.c:36)
+==642934== 
+==642934== 512 bytes in 1 blocks are still reachable in loss record 15 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10BE55: split_line (parse.c:15)
+==642934==    by 0x10A56A: main (driver.c:56)
+==642934== 
+==642934== 1,024 bytes in 1 blocks are still reachable in loss record 16 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10B629: read_line (input.c:44)
+==642934==    by 0x10A55A: main (driver.c:55)
+==642934== 
+==642934== 1,032 bytes in 1 blocks are still reachable in loss record 17 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10C316: trie_node_create (trie.c:35)
+==642934==    by 0x10C29F: trie_init (trie.c:20)
+==642934==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642934==    by 0x10A483: main (driver.c:36)
+==642934== 
+==642934== 2,048 bytes in 1 blocks are still reachable in loss record 18 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10C279: trie_init (trie.c:16)
+==642934==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642934==    by 0x10A483: main (driver.c:36)
+==642934== 
+==642934== 25,272,648 bytes in 24,489 blocks are still reachable in loss record 19 of 19
+==642934==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642934==    by 0x10C316: trie_node_create (trie.c:35)
+==642934==    by 0x10C3D1: trie_insert (trie.c:58)
+==642934==    by 0x10AAFC: dtrie_insert_directory (dtrie.c:37)
+==642934==    by 0x10A4C2: main (driver.c:38)
+==642934== 
+==642934== LEAK SUMMARY:
+==642934==    definitely lost: 9 bytes in 1 blocks
+==642934==    indirectly lost: 0 bytes in 0 blocks
+==642934==      possibly lost: 0 bytes in 0 blocks
+==642934==    still reachable: 25,278,066 bytes in 24,508 blocks
+==642934==         suppressed: 0 bytes in 0 blocks
+==642934== 
+==642934== For lists of detected and suppressed errors, rerun with: -s
+==642934== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
+==642957== 
+==642957== HEAP SUMMARY:
+==642957==     in use at exit: 25,278,075 bytes in 24,509 blocks
+==642957==   total heap usage: 24,526 allocs, 17 frees, 25,352,169 bytes allocated
+==642957== 
+==642957== 6 bytes in 2 blocks are still reachable in loss record 1 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10BFFC: concatenate_strings (parse.c:52)
+==642957==    by 0x10AD7C: shsh_execute (exec.c:25)
+==642957==    by 0x10A581: main (driver.c:57)
+==642957== 
+==642957== 8 bytes in 1 blocks are still reachable in loss record 2 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10A3FB: main (driver.c:29)
+==642957== 
+==642957== 8 bytes in 1 blocks are still reachable in loss record 3 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10C14C: parse_env_path (parse.c:82)
+==642957==    by 0x10A474: main (driver.c:34)
+==642957== 
+==642957== 9 bytes in 1 blocks are definitely lost in loss record 4 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10C1A1: parse_env_path (parse.c:87)
+==642957==    by 0x10A474: main (driver.c:34)
+==642957== 
+==642957== 15 bytes in 1 blocks are still reachable in loss record 5 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10C1A1: parse_env_path (parse.c:87)
+==642957==    by 0x10A474: main (driver.c:34)
+==642957== 
+==642957== 16 bytes in 1 blocks are still reachable in loss record 6 of 19
+==642957==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==642957==    by 0x10AB5C: dtrie_insert_directory (dtrie.c:48)
+==642957==    by 0x10A4C2: main (driver.c:38)
+==642957== 
+==642957== 16 bytes in 1 blocks are still reachable in loss record 7 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10B47F: history_init_block (history.c:8)
+==642957==    by 0x10A4DD: main (driver.c:44)
+==642957== 
+==642957== 24 bytes in 1 blocks are still reachable in loss record 8 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10A9D5: dtrie_init (dtrie.c:12)
+==642957==    by 0x10A483: main (driver.c:36)
+==642957== 
+==642957== 24 bytes in 2 blocks are still reachable in loss record 9 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10ABA2: dtrie_insert_directory (dtrie.c:49)
+==642957==    by 0x10A4C2: main (driver.c:38)
+==642957== 
+==642957== 32 bytes in 1 blocks are still reachable in loss record 10 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10A413: main (driver.c:30)
+==642957== 
+==642957== 40 bytes in 1 blocks are still reachable in loss record 11 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10C231: trie_init (trie.c:9)
+==642957==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642957==    by 0x10A483: main (driver.c:36)
+==642957== 
+==642957== 100 bytes in 1 blocks are still reachable in loss record 12 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10B48D: history_init_block (history.c:9)
+==642957==    by 0x10A4DD: main (driver.c:44)
+==642957== 
+==642957== 256 bytes in 1 blocks are still reachable in loss record 13 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10A42A: main (driver.c:31)
+==642957== 
+==642957== 257 bytes in 1 blocks are still reachable in loss record 14 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10C23F: trie_init (trie.c:11)
+==642957==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642957==    by 0x10A483: main (driver.c:36)
+==642957== 
+==642957== 512 bytes in 1 blocks are still reachable in loss record 15 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10BE55: split_line (parse.c:15)
+==642957==    by 0x10A56A: main (driver.c:56)
+==642957== 
+==642957== 1,024 bytes in 1 blocks are still reachable in loss record 16 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10B629: read_line (input.c:44)
+==642957==    by 0x10A55A: main (driver.c:55)
+==642957== 
+==642957== 1,032 bytes in 1 blocks are still reachable in loss record 17 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10C316: trie_node_create (trie.c:35)
+==642957==    by 0x10C29F: trie_init (trie.c:20)
+==642957==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642957==    by 0x10A483: main (driver.c:36)
+==642957== 
+==642957== 2,048 bytes in 1 blocks are still reachable in loss record 18 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10C279: trie_init (trie.c:16)
+==642957==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642957==    by 0x10A483: main (driver.c:36)
+==642957== 
+==642957== 25,272,648 bytes in 24,489 blocks are still reachable in loss record 19 of 19
+==642957==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642957==    by 0x10C316: trie_node_create (trie.c:35)
+==642957==    by 0x10C3D1: trie_insert (trie.c:58)
+==642957==    by 0x10AAFC: dtrie_insert_directory (dtrie.c:37)
+==642957==    by 0x10A4C2: main (driver.c:38)
+==642957== 
+==642957== LEAK SUMMARY:
+==642957==    definitely lost: 9 bytes in 1 blocks
+==642957==    indirectly lost: 0 bytes in 0 blocks
+==642957==      possibly lost: 0 bytes in 0 blocks
+==642957==    still reachable: 25,278,066 bytes in 24,508 blocks
+==642957==         suppressed: 0 bytes in 0 blocks
+==642957== 
+==642957== For lists of detected and suppressed errors, rerun with: -s
+==642957== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
+==642961== 
+==642961== HEAP SUMMARY:
+==642961==     in use at exit: 25,278,075 bytes in 24,509 blocks
+==642961==   total heap usage: 24,529 allocs, 20 frees, 25,353,708 bytes allocated
+==642961== 
+==642961== 6 bytes in 2 blocks are still reachable in loss record 1 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10BFFC: concatenate_strings (parse.c:52)
+==642961==    by 0x10AD7C: shsh_execute (exec.c:25)
+==642961==    by 0x10A581: main (driver.c:57)
+==642961== 
+==642961== 8 bytes in 1 blocks are still reachable in loss record 2 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10A3FB: main (driver.c:29)
+==642961== 
+==642961== 8 bytes in 1 blocks are still reachable in loss record 3 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10C14C: parse_env_path (parse.c:82)
+==642961==    by 0x10A474: main (driver.c:34)
+==642961== 
+==642961== 9 bytes in 1 blocks are definitely lost in loss record 4 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10C1A1: parse_env_path (parse.c:87)
+==642961==    by 0x10A474: main (driver.c:34)
+==642961== 
+==642961== 15 bytes in 1 blocks are still reachable in loss record 5 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10C1A1: parse_env_path (parse.c:87)
+==642961==    by 0x10A474: main (driver.c:34)
+==642961== 
+==642961== 16 bytes in 1 blocks are still reachable in loss record 6 of 19
+==642961==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==642961==    by 0x10AB5C: dtrie_insert_directory (dtrie.c:48)
+==642961==    by 0x10A4C2: main (driver.c:38)
+==642961== 
+==642961== 16 bytes in 1 blocks are still reachable in loss record 7 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10B47F: history_init_block (history.c:8)
+==642961==    by 0x10A4DD: main (driver.c:44)
+==642961== 
+==642961== 24 bytes in 1 blocks are still reachable in loss record 8 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10A9D5: dtrie_init (dtrie.c:12)
+==642961==    by 0x10A483: main (driver.c:36)
+==642961== 
+==642961== 24 bytes in 2 blocks are still reachable in loss record 9 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10ABA2: dtrie_insert_directory (dtrie.c:49)
+==642961==    by 0x10A4C2: main (driver.c:38)
+==642961== 
+==642961== 32 bytes in 1 blocks are still reachable in loss record 10 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10A413: main (driver.c:30)
+==642961== 
+==642961== 40 bytes in 1 blocks are still reachable in loss record 11 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10C231: trie_init (trie.c:9)
+==642961==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642961==    by 0x10A483: main (driver.c:36)
+==642961== 
+==642961== 100 bytes in 1 blocks are still reachable in loss record 12 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10B48D: history_init_block (history.c:9)
+==642961==    by 0x10A4DD: main (driver.c:44)
+==642961== 
+==642961== 256 bytes in 1 blocks are still reachable in loss record 13 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10A42A: main (driver.c:31)
+==642961== 
+==642961== 257 bytes in 1 blocks are still reachable in loss record 14 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10C23F: trie_init (trie.c:11)
+==642961==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642961==    by 0x10A483: main (driver.c:36)
+==642961== 
+==642961== 512 bytes in 1 blocks are still reachable in loss record 15 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10BE55: split_line (parse.c:15)
+==642961==    by 0x10A56A: main (driver.c:56)
+==642961== 
+==642961== 1,024 bytes in 1 blocks are still reachable in loss record 16 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10B629: read_line (input.c:44)
+==642961==    by 0x10A55A: main (driver.c:55)
+==642961== 
+==642961== 1,032 bytes in 1 blocks are still reachable in loss record 17 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10C316: trie_node_create (trie.c:35)
+==642961==    by 0x10C29F: trie_init (trie.c:20)
+==642961==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642961==    by 0x10A483: main (driver.c:36)
+==642961== 
+==642961== 2,048 bytes in 1 blocks are still reachable in loss record 18 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10C279: trie_init (trie.c:16)
+==642961==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==642961==    by 0x10A483: main (driver.c:36)
+==642961== 
+==642961== 25,272,648 bytes in 24,489 blocks are still reachable in loss record 19 of 19
+==642961==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642961==    by 0x10C316: trie_node_create (trie.c:35)
+==642961==    by 0x10C3D1: trie_insert (trie.c:58)
+==642961==    by 0x10AAFC: dtrie_insert_directory (dtrie.c:37)
+==642961==    by 0x10A4C2: main (driver.c:38)
+==642961== 
+==642961== LEAK SUMMARY:
+==642961==    definitely lost: 9 bytes in 1 blocks
+==642961==    indirectly lost: 0 bytes in 0 blocks
+==642961==      possibly lost: 0 bytes in 0 blocks
+==642961==    still reachable: 25,278,066 bytes in 24,508 blocks
+==642961==         suppressed: 0 bytes in 0 blocks
+==642961== 
+==642961== For lists of detected and suppressed errors, rerun with: -s
+==642961== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
+==643015== 
+==643015== HEAP SUMMARY:
+==643015==     in use at exit: 25,278,082 bytes in 24,510 blocks
+==643015==   total heap usage: 24,535 allocs, 25 frees, 25,356,790 bytes allocated
+==643015== 
+==643015== 8 bytes in 1 blocks are still reachable in loss record 1 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10A3FB: main (driver.c:29)
+==643015== 
+==643015== 8 bytes in 1 blocks are still reachable in loss record 2 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10C14C: parse_env_path (parse.c:82)
+==643015==    by 0x10A474: main (driver.c:34)
+==643015== 
+==643015== 9 bytes in 1 blocks are definitely lost in loss record 3 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10C1A1: parse_env_path (parse.c:87)
+==643015==    by 0x10A474: main (driver.c:34)
+==643015== 
+==643015== 13 bytes in 3 blocks are still reachable in loss record 4 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10BFFC: concatenate_strings (parse.c:52)
+==643015==    by 0x10AD7C: shsh_execute (exec.c:25)
+==643015==    by 0x10A581: main (driver.c:57)
+==643015== 
+==643015== 15 bytes in 1 blocks are still reachable in loss record 5 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10C1A1: parse_env_path (parse.c:87)
+==643015==    by 0x10A474: main (driver.c:34)
+==643015== 
+==643015== 16 bytes in 1 blocks are still reachable in loss record 6 of 19
+==643015==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==643015==    by 0x10AB5C: dtrie_insert_directory (dtrie.c:48)
+==643015==    by 0x10A4C2: main (driver.c:38)
+==643015== 
+==643015== 16 bytes in 1 blocks are still reachable in loss record 7 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10B47F: history_init_block (history.c:8)
+==643015==    by 0x10A4DD: main (driver.c:44)
+==643015== 
+==643015== 24 bytes in 1 blocks are still reachable in loss record 8 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10A9D5: dtrie_init (dtrie.c:12)
+==643015==    by 0x10A483: main (driver.c:36)
+==643015== 
+==643015== 24 bytes in 2 blocks are still reachable in loss record 9 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10ABA2: dtrie_insert_directory (dtrie.c:49)
+==643015==    by 0x10A4C2: main (driver.c:38)
+==643015== 
+==643015== 32 bytes in 1 blocks are still reachable in loss record 10 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10A413: main (driver.c:30)
+==643015== 
+==643015== 40 bytes in 1 blocks are still reachable in loss record 11 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10C231: trie_init (trie.c:9)
+==643015==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==643015==    by 0x10A483: main (driver.c:36)
+==643015== 
+==643015== 100 bytes in 1 blocks are still reachable in loss record 12 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10B48D: history_init_block (history.c:9)
+==643015==    by 0x10A4DD: main (driver.c:44)
+==643015== 
+==643015== 256 bytes in 1 blocks are still reachable in loss record 13 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10A42A: main (driver.c:31)
+==643015== 
+==643015== 257 bytes in 1 blocks are still reachable in loss record 14 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10C23F: trie_init (trie.c:11)
+==643015==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==643015==    by 0x10A483: main (driver.c:36)
+==643015== 
+==643015== 512 bytes in 1 blocks are still reachable in loss record 15 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10BE55: split_line (parse.c:15)
+==643015==    by 0x10A56A: main (driver.c:56)
+==643015== 
+==643015== 1,024 bytes in 1 blocks are still reachable in loss record 16 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10B629: read_line (input.c:44)
+==643015==    by 0x10A55A: main (driver.c:55)
+==643015== 
+==643015== 1,032 bytes in 1 blocks are still reachable in loss record 17 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10C316: trie_node_create (trie.c:35)
+==643015==    by 0x10C29F: trie_init (trie.c:20)
+==643015==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==643015==    by 0x10A483: main (driver.c:36)
+==643015== 
+==643015== 2,048 bytes in 1 blocks are still reachable in loss record 18 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10C279: trie_init (trie.c:16)
+==643015==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==643015==    by 0x10A483: main (driver.c:36)
+==643015== 
+==643015== 25,272,648 bytes in 24,489 blocks are still reachable in loss record 19 of 19
+==643015==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643015==    by 0x10C316: trie_node_create (trie.c:35)
+==643015==    by 0x10C3D1: trie_insert (trie.c:58)
+==643015==    by 0x10AAFC: dtrie_insert_directory (dtrie.c:37)
+==643015==    by 0x10A4C2: main (driver.c:38)
+==643015== 
+==643015== LEAK SUMMARY:
+==643015==    definitely lost: 9 bytes in 1 blocks
+==643015==    indirectly lost: 0 bytes in 0 blocks
+==643015==      possibly lost: 0 bytes in 0 blocks
+==643015==    still reachable: 25,278,073 bytes in 24,509 blocks
+==643015==         suppressed: 0 bytes in 0 blocks
+==643015== 
+==643015== For lists of detected and suppressed errors, rerun with: -s
+==643015== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
+==643037== 
+==643037== HEAP SUMMARY:
+==643037==     in use at exit: 25,278,086 bytes in 24,511 blocks
+==643037==   total heap usage: 24,538 allocs, 27 frees, 25,358,330 bytes allocated
+==643037== 
+==643037== 8 bytes in 1 blocks are still reachable in loss record 1 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10A3FB: main (driver.c:29)
+==643037== 
+==643037== 8 bytes in 1 blocks are still reachable in loss record 2 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10C14C: parse_env_path (parse.c:82)
+==643037==    by 0x10A474: main (driver.c:34)
+==643037== 
+==643037== 9 bytes in 1 blocks are definitely lost in loss record 3 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10C1A1: parse_env_path (parse.c:87)
+==643037==    by 0x10A474: main (driver.c:34)
+==643037== 
+==643037== 15 bytes in 1 blocks are still reachable in loss record 4 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10C1A1: parse_env_path (parse.c:87)
+==643037==    by 0x10A474: main (driver.c:34)
+==643037== 
+==643037== 16 bytes in 1 blocks are still reachable in loss record 5 of 19
+==643037==    at 0x4846BE0: realloc (vg_replace_malloc.c:1649)
+==643037==    by 0x10AB5C: dtrie_insert_directory (dtrie.c:48)
+==643037==    by 0x10A4C2: main (driver.c:38)
+==643037== 
+==643037== 16 bytes in 1 blocks are still reachable in loss record 6 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10B47F: history_init_block (history.c:8)
+==643037==    by 0x10A4DD: main (driver.c:44)
+==643037== 
+==643037== 17 bytes in 4 blocks are still reachable in loss record 7 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10BFFC: concatenate_strings (parse.c:52)
+==643037==    by 0x10AD7C: shsh_execute (exec.c:25)
+==643037==    by 0x10A581: main (driver.c:57)
+==643037== 
+==643037== 24 bytes in 1 blocks are still reachable in loss record 8 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10A9D5: dtrie_init (dtrie.c:12)
+==643037==    by 0x10A483: main (driver.c:36)
+==643037== 
+==643037== 24 bytes in 2 blocks are still reachable in loss record 9 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10ABA2: dtrie_insert_directory (dtrie.c:49)
+==643037==    by 0x10A4C2: main (driver.c:38)
+==643037== 
+==643037== 32 bytes in 1 blocks are still reachable in loss record 10 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10A413: main (driver.c:30)
+==643037== 
+==643037== 40 bytes in 1 blocks are still reachable in loss record 11 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10C231: trie_init (trie.c:9)
+==643037==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==643037==    by 0x10A483: main (driver.c:36)
+==643037== 
+==643037== 100 bytes in 1 blocks are still reachable in loss record 12 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10B48D: history_init_block (history.c:9)
+==643037==    by 0x10A4DD: main (driver.c:44)
+==643037== 
+==643037== 256 bytes in 1 blocks are still reachable in loss record 13 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10A42A: main (driver.c:31)
+==643037== 
+==643037== 257 bytes in 1 blocks are still reachable in loss record 14 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10C23F: trie_init (trie.c:11)
+==643037==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==643037==    by 0x10A483: main (driver.c:36)
+==643037== 
+==643037== 512 bytes in 1 blocks are still reachable in loss record 15 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10BE55: split_line (parse.c:15)
+==643037==    by 0x10A56A: main (driver.c:56)
+==643037== 
+==643037== 1,024 bytes in 1 blocks are still reachable in loss record 16 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10B629: read_line (input.c:44)
+==643037==    by 0x10A55A: main (driver.c:55)
+==643037== 
+==643037== 1,032 bytes in 1 blocks are still reachable in loss record 17 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10C316: trie_node_create (trie.c:35)
+==643037==    by 0x10C29F: trie_init (trie.c:20)
+==643037==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==643037==    by 0x10A483: main (driver.c:36)
+==643037== 
+==643037== 2,048 bytes in 1 blocks are still reachable in loss record 18 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10C279: trie_init (trie.c:16)
+==643037==    by 0x10A9F5: dtrie_init (dtrie.c:17)
+==643037==    by 0x10A483: main (driver.c:36)
+==643037== 
+==643037== 25,272,648 bytes in 24,489 blocks are still reachable in loss record 19 of 19
+==643037==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==643037==    by 0x10C316: trie_node_create (trie.c:35)
+==643037==    by 0x10C3D1: trie_insert (trie.c:58)
+==643037==    by 0x10AAFC: dtrie_insert_directory (dtrie.c:37)
+==643037==    by 0x10A4C2: main (driver.c:38)
+==643037== 
+==643037== LEAK SUMMARY:
+==643037==    definitely lost: 9 bytes in 1 blocks
+==643037==    indirectly lost: 0 bytes in 0 blocks
+==643037==      possibly lost: 0 bytes in 0 blocks
+==643037==    still reachable: 25,278,077 bytes in 24,510 blocks
+==643037==         suppressed: 0 bytes in 0 blocks
+==643037== 
+==643037== For lists of detected and suppressed errors, rerun with: -s
+==643037== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
+==642870== Invalid read of size 8
+==642870==    at 0x10A74E: main (driver.c:93)
+==642870==  Address 0x4a6f298 is 0 bytes after a block of size 8 alloc'd
+==642870==    at 0x4841848: malloc (vg_replace_malloc.c:431)
+==642870==    by 0x10C14C: parse_env_path (parse.c:82)
+==642870==    by 0x10A474: main (driver.c:34)
+==642870== 
+==642870== 
+==642870== HEAP SUMMARY:
+==642870==     in use at exit: 0 bytes in 0 blocks
+==642870==   total heap usage: 24,544 allocs, 24,544 frees, 25,361,458 bytes allocated
+==642870== 
+==642870== All heap blocks were freed -- no leaks are possible
+==642870== 
+==642870== For lists of detected and suppressed errors, rerun with: -s
+==642870== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
