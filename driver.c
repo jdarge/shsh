@@ -71,7 +71,6 @@ int main(void) {
     free(h);
 
     // Free ENV PATH DT
-    // TODO:
     trie_free(env->path->dt->trie->root);
 
     for (int i = 0; i < env->path->dt->trie->matchesSize * TRIE_MATCHES_SIZE; i++) {

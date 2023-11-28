@@ -1,2 +1,2 @@
 #!/bin/sh
-./run.sh rebuild && ./run.sh
+./run.sh build && ./run.sh
