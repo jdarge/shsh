@@ -34,6 +34,7 @@ char *read_line(char *b, int p, ENV *env, History *h) {
             free(buffer);
             return NULL;
         }
+
         if(b[0] && p != 0)
             printf("> %s", buffer);
         else
@@ -54,12 +55,10 @@ char *read_line(char *b, int p, ENV *env, History *h) {
         pthread_join(input_thread, NULL);
 
         if (ctrl_c_pressed) {
-            pthread_cancel(input_thread);
+            //pthread_cancel(input_thread);
             ctrl_c_pressed = 0;
 
-            for (int i = 0; i < position; i++) {
-                printf("\b \b");
-            }
+            erase_buffer(position);
 
             free(buffer);
             return NULL;
@@ -79,42 +78,29 @@ char *read_line(char *b, int p, ENV *env, History *h) {
         }
 
         if (c == EOF || c == '\n') {
+            if(position == 0) goto next;
             buffer[position] = '\0';
             printf("\n");
             return buffer;
         }
 
-        else if (c == 27 && get_char() == 91) {
-            int arrow_key = get_char();
-            if (arrow_key == UP_ARROW) {
-                if (local_history_idx - 1 >= 0) {
-                    for (int i = 0; i < position; i++) {
-                        printf("\b \b");
-                    }
-
-                    strcpy(buffer, h->history_list[--local_history_idx]);
-                    position = (int) strlen(buffer);
-                    printf("\r> %s", buffer);
-                }
-            } else if (arrow_key == DOWN_ARROW) {
-                if (local_history_idx + 1 <= h->history_idx - 1) {
-                    for (int i = 0; i < position; i++) {
-                        printf("\b \b");
-                    }
-
-                    strcpy(buffer, h->history_list[++local_history_idx]);
-                    position = (int) strlen(buffer);
-                    printf("\r> %s", buffer);
-                }
-            } else if (arrow_key == RIGHT_ARROW) {//TODO
-                if (position + 1 <= (int) strlen(buffer)) {
-                    printf("\033[1C");
-                    position++;
-                }
-            } else if (arrow_key == LEFT_ARROW) {//TODO
-                if (position - 1 >= 0) {
-                    printf("\033[1D");
-                    position--;
+        else if (c == 27) {
+            char o = get_char();
+            if (o == 91) {
+                int arrow_key = get_char();
+                switch (arrow_key) {
+                case UP_ARROW:
+                    handle_up_arrow(h->history_list, buffer, &local_history_idx, &position);
+                    break;
+                case DOWN_ARROW:
+                    handle_down_arrow(h->history_list, buffer, &local_history_idx, &position, h->history_idx);
+                    break;
+                case RIGHT_ARROW:
+                    handle_right_arrow(&position, (int) strlen(buffer));
+                    break;
+                case LEFT_ARROW:
+                    handle_left_arrow(&position);
+                    break;
                 }
             }
         }
@@ -124,7 +110,7 @@ char *read_line(char *b, int p, ENV *env, History *h) {
                 position--;
                 buffer[position] = '\0';
                 printf("\r> %s ", buffer);
-                printf("\b \b");
+                erase_buffer(1);
             }
         }
 
@@ -147,7 +133,14 @@ char *read_line(char *b, int p, ENV *env, History *h) {
             }
         }
 
+        next:
         pthread_create(&input_thread, NULL, input_thread_function, &c);
+    }
+}
+
+void erase_buffer(int count) {
+    for (int i = 0; i < count; i++) {
+        printf("\b \b");
     }
 }
 
@@ -163,6 +156,38 @@ int get_char(void) {
     return ch;
 }
 
+void handle_up_arrow(char** list, char *buffer, int *local_history_idx, int *position) {
+    if (*local_history_idx - 1 >= 0) {
+        erase_buffer(*position);
+        strcpy(buffer, list[--(*local_history_idx)]);
+        *position = (int) strlen(buffer);
+        printf("\r> %s", buffer);
+    }
+}
+
+void handle_down_arrow(char** list, char *buffer, int *local_history_idx, int *position, int limit) {
+    if (*local_history_idx + 1 <= limit - 1) {
+        erase_buffer(*position);
+        strcpy(buffer, list[++(*local_history_idx)]);
+        *position = (int) strlen(buffer);
+        printf("\r> %s", buffer);
+    }
+}
+
+void handle_right_arrow(int *position, int buffer_length) {
+    if (*position + 1 <= buffer_length) {
+        printf("\033[1C");
+        (*position)++;
+    }
+}
+
+void handle_left_arrow(int *position) {
+    if (*position - 1 >= 0) {
+        printf("\033[1D");
+        (*position)--;
+    }
+}
+
 void ctrlC_handler(int signum) {
 
     (void) signum;
@@ -172,6 +197,15 @@ void ctrlC_handler(int signum) {
     fflush(stdout);
 
     pthread_cancel(input_thread);
+}
+
+void ctrlL_handler(int signum) {
+    (void) signum;
+
+    printf("\n\n:)\n");
+
+    printf("\033[2J\033[H");
+    fflush(stdout);
 }
 
 void *input_thread_function(void *arg) {
@@ -255,7 +289,7 @@ char *tab_completion(char *partial_input, int pos, ENV *env) {
         if(d->trie->matchesCount != 0) {
             printf("\n");
             for(int i = 0; i < d->trie->matchesCount; i++) {
-                printf("%-20s", strrchr(d->trie->matches[i], '/') + 1);
+                printf("%-25s", strrchr(d->trie->matches[i], '/') + 1);
                 if ((i + 1) % 3 == 0 || i == d->trie->matchesCount - 1) {
                     printf("\n");
                 }

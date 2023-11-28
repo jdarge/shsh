@@ -81,7 +81,7 @@ int execute_single_command(char **args, History *h) {
             exit(EXIT_FAILURE);
         }
     } else if (cpid < 0) {
-        printf("%sError forking%s\n", RED, RESET);
+        perror("fork");
         flag = 0;
         exit(EXIT_FAILURE);
     }

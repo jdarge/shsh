@@ -23,6 +23,8 @@ typedef struct Trie {
 
 Trie *trie_init(void);
 
+void trie_match_set_null(Trie* t, int l, int u);
+
 TrieNode *trie_node_create(void);
 
 void trie_insert(TrieNode *root, char *key);

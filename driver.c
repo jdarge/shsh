@@ -46,6 +46,7 @@ int main(void) {
     do {
 
         signal(SIGINT, ctrlC_handler);
+        signal(SIGWINCH, ctrlL_handler);
 
         if (system("pwd"))
             return 1;
@@ -64,37 +65,37 @@ int main(void) {
     } while (status);
 
     // Free History
+    char** hl = h->history_list;
     for (int i = 0; i < h->history_idx; i++) {
-        free(h->history_list[i]);
+        free(hl[i]);
     }
-    free(h->history_list);
+    free(hl);
     free(h);
 
     // Free ENV PATH DT
-    trie_free(env->path->dt->trie->root);
+    DirecTrie* dt = env->path->dt;
+    Trie* t = dt->trie;
+    trie_free(t->root);
+    for (int i = 0; i < t->matchesSize * TRIE_MATCHES_SIZE; i++)
+        if(t->matches[i]) free(t->matches[i]);
+    free(t->matches);
+    free(t->prefix);
+    free(t);
 
-    for (int i = 0; i < env->path->dt->trie->matchesSize * TRIE_MATCHES_SIZE; i++) {
-        free(env->path->dt->trie->matches[i]);
-    }
-    free(env->path->dt->trie->matches);
-    free(env->path->dt->trie->prefix);
-    free(env->path->dt->trie);
-
-    for (int i = 0; i < env->path->dt->dir_count; i++) {
-        free(env->path->dt->directory[i]);
-    }
-    free(env->path->dt->directory);
-    free(env->path->dt);
+    for (int i = 0; i < dt->dir_count; i++)
+        free(dt->directory[i]);
+    free(dt->directory);
+    free(dt);
 
     // Free ENV PATH
-    for(unsigned int i = 0; i < env->path->parsed_count; i++) {
-        free(env->path->parsed[i]);
-    }
-    free(env->path->parsed);
-    free(env->path->full);
+    PATH* p = env->path;
+    for(unsigned int i = 0; i < p->parsed_count; i++)
+        free(p->parsed[i]);
+    free(p->parsed);
+    free(p->full);
+    free(p);
 
     // Free ENV
-    free(env->path);
     free(env);
 
     return 0;

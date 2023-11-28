@@ -19,7 +19,15 @@ Trie *trie_init(void) {
 
     t->root = trie_node_create();
 
+    trie_match_set_null(t, 0, TRIE_MATCHES_SIZE);
+
     return t;
+}
+
+void trie_match_set_null(Trie* t, int l, int u) {
+    for(int i = l; i < u; i++) {
+        t->matches[i] = NULL;
+    }
 }
 
 TrieNode *trie_node_create(void) {
@@ -87,16 +95,20 @@ void trie_search_helper(TrieNode *current, Trie *t, int level) {
 
     if (current->is_end) {
         if (t->matchesCount + 1 >= TRIE_MATCHES_SIZE * t->matchesSize) {
-            t->matches = realloc(t->matches, (++t->matchesSize * TRIE_MATCHES_SIZE) * sizeof(char *));
+            
+            t->matches = realloc(t->matches, ++t->matchesSize * TRIE_MATCHES_SIZE * sizeof(char *));
+
+            trie_match_set_null(t, t->matchesCount, t->matchesSize * TRIE_MATCHES_SIZE);
         }
+
         if (t->matches == NULL) {
             perror("realloc");
             exit(EXIT_FAILURE);
         }
 
-        if (t->matches[t->matchesCount])
+        if (t->matches[t->matchesCount] != NULL)
             free(t->matches[t->matchesCount]);
-        t->matches[t->matchesCount++] = strdup(t->prefix); // mem leak (valgrind)
+        t->matches[t->matchesCount++] = strdup(t->prefix); 
     }
 
     for (int i = 0; i < CHARACTER_SET_SIZE; i++) {
