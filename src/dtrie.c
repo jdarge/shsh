@@ -36,9 +36,9 @@ void dtrie_insert_directory(DirecTrie *d, char *dirPath) {
 
             trie_insert(d->trie->root, filePath);
 
-            if (entry->d_type == DT_DIR) {
-                // insertFilesInDirectory(d, filePath);
-            }
+            // if (entry->d_type == DT_DIR) {
+            //     insertFilesInDirectory(d, filePath);
+            // }
         }
     }
 
@@ -57,9 +57,11 @@ void dtrie_search(DirecTrie *d, char *key) {
     d->trie->matchesCount = 0;
 
     for (int i = 0; i < d->dir_count; i++) {
+        
         strcpy(path, d->directory[i]);
         if (path[strlen(d->directory[i]) - 1] != '/')
             strcat(path, "/");
+
         strcat(path, key);
         path[strlen(path)] = '\0';
 

@@ -56,10 +56,7 @@ int shsh_execute(char **args, History *h) {
     (void) flag;
 
     history: // TODO lazy fix
-    if (h->history_idx < HISTORY_SIZE) {
-        h->history_list[h->history_idx++] = original;
-        // h->history_idx++;
-    }
+    history_append(original, h);
 
     return 1;
 }
@@ -71,24 +68,27 @@ int execute_single_command(char **args, History *h) {
     int flag = get_internal_command(args);
 
     if (flag) {
-        exec_internal_command(args, flag, h);
-        return 1;
+        return exec_internal_command(args, flag, h);
     }
 
+    flag = 1;
     cpid = fork();
     if (cpid == 0) {
         int t = execvp(args[0], args);
         if (t < 0) {
+            perror("execvp");
+            flag = 0;
             exit(EXIT_FAILURE);
         }
     } else if (cpid < 0) {
         printf("%sError forking%s\n", RED, RESET);
-        return 0;
+        flag = 0;
+        exit(EXIT_FAILURE);
     }
 
     waitpid(cpid, &status, 0);
 
-    return 1;
+    return flag;
 }
 
 int execute_piped_commands(char **args, int pipe_index, History *h) {

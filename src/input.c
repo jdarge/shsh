@@ -244,6 +244,8 @@ char *tab_completion(char *partial_input, int pos, ENV *env) {
         show bin context
     */
 
+    (void) pos;
+
     // TODO: this should only be done if there's no command called previous
     DirecTrie *d = env->path->dt;
     dtrie_search(d, partial_input);
@@ -252,7 +254,7 @@ char *tab_completion(char *partial_input, int pos, ENV *env) {
     } else {// 0 || >1
         if(d->trie->matchesCount != 0) {
             printf("\n");
-            for(unsigned i = 0; i < d->trie->matchesCount; i++) {
+            for(int i = 0; i < d->trie->matchesCount; i++) {
                 printf("%-20s", strrchr(d->trie->matches[i], '/') + 1);
                 if ((i + 1) % 3 == 0 || i == d->trie->matchesCount - 1) {
                     printf("\n");

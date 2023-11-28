@@ -10,6 +10,8 @@ typedef struct History {
 
 History *history_init_block(void);
 
+void history_append(char *string, History *h);
+
 /*
 
 store history
