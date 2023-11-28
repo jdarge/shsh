@@ -267,6 +267,7 @@ char *tab_completion(char *partial_input, int pos, ENV *env) {
     // TODO: if command called previous check only CWD
     //  (dont bother with trie & include subdir)
 }
+
 /*  TAB COMPLETION
 
     DIR *dir;
