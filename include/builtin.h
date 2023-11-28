@@ -1,5 +1,5 @@
-#ifndef BUILTIN_H_SHSH
-#define BUILTIN_H_SHSH
+#ifndef SHSH_BUILTIN_H
+#define SHSH_BUILTIN_H
 
 #include "history.h"
 

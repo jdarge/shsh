@@ -1,7 +1,10 @@
-#ifndef ENV_H_SHSH
-#define ENV_H_SHSH
+#ifndef SHSH_ENV_H
+#define SHSH_ENV_H
+
+#include "dtrie.h"
 
 typedef struct PATH {
+    DirecTrie *dt; // todo, find a more appropriate spot
     char *full;
     char **parsed;
     unsigned int parsed_count;

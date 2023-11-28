@@ -1,5 +1,5 @@
-#ifndef EXEC_H_SHSH
-#define EXEC_H_SHSH
+#ifndef SHSH_EXEC_H
+#define SHSH_EXEC_H
 
 #include "history.h"
 

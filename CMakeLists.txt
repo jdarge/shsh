@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.24.2)
 # Setting a variable to use for both the project name and the resulting binary executable
 set(REPO shsh)
 project(${REPO})
-set(PROJECT_NAME ${REPO}) 
+set(PROJECT_NAME ${REPO})
 
 
 

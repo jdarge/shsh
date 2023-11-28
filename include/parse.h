@@ -1,5 +1,5 @@
-#ifndef PARSE_H_SHSH
-#define PARSE_H_SHSH
+#ifndef SHSH_PARSE_H
+#define SHSH_PARSE_H
 
 #include "env.h"
 

@@ -1,5 +1,5 @@
-#ifndef INPUT_H_SHSH
-#define INPUT_H_SHSH
+#ifndef SHSH_INPUT_H
+#define SHSH_INPUT_H
 
 #include "env.h"
 #include "history.h"

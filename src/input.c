@@ -1,5 +1,6 @@
 #include "input.h"
 
+#include "dtrie.h"
 #include "defs.h"
 #include "env.h"
 #include "history.h"
@@ -24,6 +25,7 @@ char *read_line(char *b, int p, ENV *env, History *h) {
     int local_history_idx = h->history_idx;
 
     if (b) {
+
         buffer = b;
         position = p;
 
@@ -32,15 +34,17 @@ char *read_line(char *b, int p, ENV *env, History *h) {
             free(buffer);
             return NULL;
         }
-        printf("> %s", buffer);
+        if(b[0] && p != 0)
+            printf("> %s", buffer);
+        else
+            printf("> ");
 
     } else {
         buffer = malloc(sizeof(char) * buffsize);
-    }
-
-    if (!buffer) {
-        fprintf(stderr, "%sshsh: Allocation error%s\n", RED, RESET);
-        exit(EXIT_FAILURE);
+        if (!buffer) {
+            fprintf(stderr, "%sshsh: Allocation error%s\n", RED, RESET);
+            exit(EXIT_FAILURE);
+        }
     }
 
     pthread_create(&input_thread, NULL, input_thread_function, &c);
@@ -62,18 +66,25 @@ char *read_line(char *b, int p, ENV *env, History *h) {
         }
 
         if (c == '\t') { // TODO!!!! need to use finish tab_comp and use char* comp
+
             char *completion = tab_completion(buffer, position, env);
+
             if (!completion) {
                 printf("\n");
                 return read_line(buffer, position, env, h);
             }
+
+            // TODO: replace partial with returned word and update pos
+
         }
 
         if (c == EOF || c == '\n') {
             buffer[position] = '\0';
             printf("\n");
             return buffer;
-        } else if (c == 27 && get_char() == 91) {
+        }
+
+        else if (c == 27 && get_char() == 91) {
             int arrow_key = get_char();
             if (arrow_key == UP_ARROW) {
                 if (local_history_idx - 1 >= 0) {
@@ -106,14 +117,18 @@ char *read_line(char *b, int p, ENV *env, History *h) {
                     position--;
                 }
             }
-        } else if (c == BACKSPACE) {
+        }
+
+        else if (c == BACKSPACE) {
             if (position > 0) {
                 position--;
                 buffer[position] = '\0';
                 printf("\r> %s ", buffer);
                 printf("\b \b");
             }
-        } else {
+        }
+
+        else {
             if (!ctrl_c_pressed) {
                 buffer[position] = (char) c;
                 position++;
@@ -168,7 +183,6 @@ void *input_thread_function(void *arg) {
 char *tab_completion(char *partial_input, int pos, ENV *env) {
 
     /*
-
         RETURN:
             NO HIT: 
                 return NULL
@@ -177,7 +191,9 @@ char *tab_completion(char *partial_input, int pos, ENV *env) {
                 return NULL
             SINGLE HIT: 
                 update 'word' right before pos
-
+                return corrected string at pos
+    */
+    /*
         POSSIBLE DIRS:
             .
             PATH (
@@ -185,7 +201,8 @@ char *tab_completion(char *partial_input, int pos, ENV *env) {
                 /usr/bin
                 /bin
             )            
-
+    */
+    /*
         1. tokenize partial_input until we get to pos
             i.e.
             cat mai\t
@@ -203,7 +220,8 @@ char *tab_completion(char *partial_input, int pos, ENV *env) {
         a. perhaps use $column to make this print
         5. on multiple hits NOTHING should be done
         6. if theres only one hit, complete and return
-
+    */
+    /*
         ADDITIONAL NOTES:
             > ls\t
             ls                  lsipc           lspci
@@ -225,9 +243,29 @@ char *tab_completion(char *partial_input, int pos, ENV *env) {
         if it's the first command
         show bin context
     */
-    // printf("\n:%s:", partial_input);
-    (void) env;
-    (void) pos;
+
+    // TODO: this should only be done if there's no command called previous
+    DirecTrie *d = env->path->dt;
+    dtrie_search(d, partial_input);
+    if (d->trie->matchesCount == 1) {
+        return d->trie->matches[0];
+    } else {// 0 || >1
+        if(d->trie->matchesCount != 0) {
+            printf("\n");
+            for(unsigned i = 0; i < d->trie->matchesCount; i++) {
+                printf("%-20s", strrchr(d->trie->matches[i], '/') + 1);
+                if ((i + 1) % 3 == 0 || i == d->trie->matchesCount - 1) {
+                    printf("\n");
+                }
+            }
+        }
+        return NULL;
+    }
+
+    // TODO: if command called previous check only CWD
+    //  (dont bother with trie & include subdir)
+}
+/*  TAB COMPLETION
 
     DIR *dir;
     struct dirent *ent;
@@ -235,7 +273,7 @@ char *tab_completion(char *partial_input, int pos, ENV *env) {
 
     if ((dir = opendir(".")) == NULL) {
         perror("opendir");
-        return partial_input;
+        return NULL;
     }
 
     while ((ent = readdir(dir)) != NULL) {
@@ -259,6 +297,4 @@ char *tab_completion(char *partial_input, int pos, ENV *env) {
 
     if (NULL) {
     }
-
-    return NULL;
-}
+*/

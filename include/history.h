@@ -1,5 +1,5 @@
-#ifndef HISTORY_H_SHSH
-#define HISTORY_H_SHSH
+#ifndef SHSH_HISTORY_H
+#define SHSH_HISTORY_H
 
 #define HISTORY_SIZE 100
 
