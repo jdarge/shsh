@@ -29,7 +29,6 @@ void history_append(char *string, History *h) {
     } 
 
     else {
-        t[idx] = (char*) malloc(sizeof(char) * (strlen(string) + 1));
         t[idx] = string;
         h->history_idx++;
     }
