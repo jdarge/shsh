@@ -1,1 +1,2 @@
 # shsh
+todo: -lpthread (BSD)
