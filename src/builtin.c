@@ -9,7 +9,8 @@
 #include <unistd.h>
 #include <wordexp.h>
 
-int get_internal_command(char **args) {
+int get_internal_command (char** args) {
+
     if (strcmp(args[0], "cd") == 0) {
         return CD;
     } else if (strcmp(args[0], "!!") == 0) {
@@ -21,8 +22,9 @@ int get_internal_command(char **args) {
     return 0;
 }
 
-void cd_home(void) {
-    const char *home = getenv("HOME");
+void cd_home (void) {
+
+    const char* home = getenv("HOME");
     if (!home) {
         perror("The HOME environment variable is not set.");
     } else {
@@ -32,7 +34,7 @@ void cd_home(void) {
     }
 }
 
-int cd(char **args) {
+int cd (char** args) {
 
     if (args[1] == NULL) {
         cd_home();
@@ -62,9 +64,11 @@ int cd(char **args) {
     return CD;
 }
 
-char **double_bang(History *h) {
-    if (h->history_idx != 0)
+char** double_bang (History* h) {
+
+    if (h->history_idx != 0) {
         return split_line(h->history_list[h->history_idx - 1]);
+    }
 
     return NULL;
 }

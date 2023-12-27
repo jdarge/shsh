@@ -7,9 +7,9 @@
 #include <dirent.h>
 #include <limits.h>
 
-DirecTrie *dtrie_init(void) {
+DirecTrie* dtrie_init (void) {
 
-    DirecTrie *d = (DirecTrie *) malloc(sizeof(DirecTrie));
+    DirecTrie* d = (DirecTrie*) malloc(sizeof(DirecTrie));
 
     d->directory = NULL;
     d->dir_count = 0;
@@ -19,10 +19,10 @@ DirecTrie *dtrie_init(void) {
     return d;
 }
 
-void dtrie_insert_directory(DirecTrie *d, char *dirPath) {
+void dtrie_insert_directory (DirecTrie* d, char* dirPath) {
 
-    DIR *directory;
-    struct dirent *entry;
+    DIR* directory;
+    struct dirent* entry;
 
     if ((directory = opendir(dirPath)) == NULL) {
         perror("opendir");
@@ -45,22 +45,23 @@ void dtrie_insert_directory(DirecTrie *d, char *dirPath) {
     closedir(directory);
 
 
-    d->directory = realloc(d->directory, (d->dir_count + 1) * sizeof(char *));
-    d->directory[d->dir_count] = (char *) malloc(strlen(dirPath) + 1);
+    d->directory = realloc(d->directory, (d->dir_count + 1) * sizeof(char*));
+    d->directory[d->dir_count] = (char*) malloc(strlen(dirPath) + 1);
     strcpy(d->directory[d->dir_count], dirPath);
     d->dir_count++;
 }
 
-void dtrie_search(DirecTrie *d, char *key) {
+void dtrie_search (DirecTrie* d, char* key) {
 
-    char *path = (char *) calloc(TRIE_PREFIX_SIZE, sizeof(char));
+    char* path = (char*) calloc(TRIE_PREFIX_SIZE, sizeof(char));
     d->trie->matchesCount = 0;
 
     for (int i = 0; i < d->dir_count; i++) {
-        
+
         strcpy(path, d->directory[i]);
-        if (path[strlen(d->directory[i]) - 1] != '/')
+        if (path[strlen(d->directory[i]) - 1] != '/') {
             strcat(path, "/");
+        }
 
         strcat(path, key);
         path[strlen(path)] = '\0';

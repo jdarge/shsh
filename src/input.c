@@ -14,13 +14,14 @@
 #include <unistd.h>
 
 volatile int ctrl_c_pressed = 0;
+
 pthread_t input_thread;
 
-char *read_line(char *b, int p, ENV *env, History *h) {
+char* read_line (char* b, int p, ENV* env, History* h) {
 
     int buffsize = 1024;
     int position = 0;
-    char *buffer;
+    char* buffer;
     int c;
     int local_history_idx = h->history_idx;
 
@@ -35,10 +36,11 @@ char *read_line(char *b, int p, ENV *env, History *h) {
             return NULL;
         }
 
-        if(b[0] && p != 0)
+        if (b[0] && p != 0) {
             printf("> %s", buffer);
-        else
+        } else {
             printf("> ");
+        }
 
     } else {
         buffer = malloc(sizeof(char) * buffsize);
@@ -66,7 +68,7 @@ char *read_line(char *b, int p, ENV *env, History *h) {
 
         if (c == '\t') { // TODO!!!! need to use finish tab_comp and use char* comp
 
-            char *completion = tab_completion(buffer, position, env);
+            char* completion = tab_completion(buffer, position, env);
 
             if (!completion) {
                 printf("\n");
@@ -78,43 +80,39 @@ char *read_line(char *b, int p, ENV *env, History *h) {
         }
 
         if (c == EOF || c == '\n') {
-            if(position == 0) goto next;
+            if (position == 0) {
+                goto next;
+            }
             buffer[position] = '\0';
             printf("\n");
             return buffer;
-        }
-
-        else if (c == 27) {
+        } else if (c == 27) {
             char o = get_char();
             if (o == 91) {
                 int arrow_key = get_char();
                 switch (arrow_key) {
-                case UP_ARROW:
-                    handle_up_arrow(h->history_list, buffer, &local_history_idx, &position);
-                    break;
-                case DOWN_ARROW:
-                    handle_down_arrow(h->history_list, buffer, &local_history_idx, &position, h->history_idx);
-                    break;
-                case RIGHT_ARROW:
-                    handle_right_arrow(&position, (int) strlen(buffer));
-                    break;
-                case LEFT_ARROW:
-                    handle_left_arrow(&position);
-                    break;
+                    case UP_ARROW:
+                        handle_up_arrow(h->history_list, buffer, &local_history_idx, &position);
+                        break;
+                    case DOWN_ARROW:
+                        handle_down_arrow(h->history_list, buffer, &local_history_idx, &position, h->history_idx);
+                        break;
+                    case RIGHT_ARROW:
+                        handle_right_arrow(&position, (int) strlen(buffer));
+                        break;
+                    case LEFT_ARROW:
+                        handle_left_arrow(&position);
+                        break;
                 }
             }
-        }
-
-        else if (c == BACKSPACE) {
+        } else if (c == BACKSPACE) {
             if (position > 0) {
                 position--;
                 buffer[position] = '\0';
                 printf("\r> %s ", buffer);
                 erase_buffer(1);
             }
-        }
-
-        else {
+        } else {
             if (!ctrl_c_pressed) {
                 buffer[position] = (char) c;
                 position++;
@@ -138,13 +136,15 @@ char *read_line(char *b, int p, ENV *env, History *h) {
     }
 }
 
-void erase_buffer(int count) {
+void erase_buffer (int count) {
+
     for (int i = 0; i < count; i++) {
         printf("\b \b");
     }
 }
 
-int get_char(void) {
+int get_char (void) {
+
     int ch;
     struct termios oldt, newt;
     tcgetattr(STDIN_FILENO, &oldt);
@@ -156,7 +156,8 @@ int get_char(void) {
     return ch;
 }
 
-void handle_up_arrow(char** list, char *buffer, int *local_history_idx, int *position) {
+void handle_up_arrow (char** list, char* buffer, int* local_history_idx, int* position) {
+
     if (*local_history_idx - 1 >= 0) {
         erase_buffer(*position);
         strcpy(buffer, list[--(*local_history_idx)]);
@@ -165,7 +166,8 @@ void handle_up_arrow(char** list, char *buffer, int *local_history_idx, int *pos
     }
 }
 
-void handle_down_arrow(char** list, char *buffer, int *local_history_idx, int *position, int limit) {
+void handle_down_arrow (char** list, char* buffer, int* local_history_idx, int* position, int limit) {
+
     if (*local_history_idx + 1 <= limit - 1) {
         erase_buffer(*position);
         strcpy(buffer, list[++(*local_history_idx)]);
@@ -174,21 +176,23 @@ void handle_down_arrow(char** list, char *buffer, int *local_history_idx, int *p
     }
 }
 
-void handle_right_arrow(int *position, int buffer_length) {
+void handle_right_arrow (int* position, int buffer_length) {
+
     if (*position + 1 <= buffer_length) {
         printf("\033[1C");
         (*position)++;
     }
 }
 
-void handle_left_arrow(int *position) {
+void handle_left_arrow (int* position) {
+
     if (*position - 1 >= 0) {
         printf("\033[1D");
         (*position)--;
     }
 }
 
-void ctrlC_handler(int signum) {
+void ctrlC_handler (int signum) {
 
     (void) signum;
 
@@ -199,7 +203,8 @@ void ctrlC_handler(int signum) {
     pthread_cancel(input_thread);
 }
 
-void ctrlL_handler(int signum) {
+void ctrlL_handler (int signum) {
+
     (void) signum;
 
     printf("\n\n:)\n");
@@ -208,13 +213,14 @@ void ctrlL_handler(int signum) {
     fflush(stdout);
 }
 
-void *input_thread_function(void *arg) {
-    int *result = (int *) arg;
+void* input_thread_function (void* arg) {
+
+    int* result = (int*) arg;
     *result = get_char();
     return NULL;
 }
 
-char *tab_completion(char *partial_input, int pos, ENV *env) {
+char* tab_completion (char* partial_input, int pos, ENV* env) {
 
     /*
         RETURN:
@@ -281,14 +287,14 @@ char *tab_completion(char *partial_input, int pos, ENV *env) {
     (void) pos;
 
     // TODO: this should only be done if there's no command called previous
-    DirecTrie *d = env->path->dt;
+    DirecTrie* d = env->path->dt;
     dtrie_search(d, partial_input);
     if (d->trie->matchesCount == 1) {
         return d->trie->matches[0];
     } else {// 0 || >1
-        if(d->trie->matchesCount != 0) {
+        if (d->trie->matchesCount != 0) {
             printf("\n");
-            for(int i = 0; i < d->trie->matchesCount; i++) {
+            for (int i = 0; i < d->trie->matchesCount; i++) {
                 printf("%-25s", strrchr(d->trie->matches[i], '/') + 1);
                 if ((i + 1) % 3 == 0 || i == d->trie->matchesCount - 1) {
                     printf("\n");

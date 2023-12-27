@@ -7,12 +7,12 @@
 #define DOUBLE_BANG 0x11
 #define HISTORY 0x12
 
-int get_internal_command(char **args);
+int get_internal_command (char** args);
 
-void cd_home(void);
+void cd_home (void);
 
-int cd(char **args);
+int cd (char** args);
 
-char **double_bang(History *h);
+char** double_bang (History* h);
 
 #endif

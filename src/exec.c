@@ -12,7 +12,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-int shsh_execute(char **args, History *h) {
+int shsh_execute (char** args, History* h) {
 
     if (!args || !args[0]) {
         return 1;
@@ -22,7 +22,7 @@ int shsh_execute(char **args, History *h) {
         return 0;
     }
 
-    char *original = concatenate_strings(args);
+    char* original = concatenate_strings(args);
     int flag;
 
     int pipe_index = -1;
@@ -61,7 +61,7 @@ int shsh_execute(char **args, History *h) {
     return 1;
 }
 
-int execute_single_command(char **args, History *h) {
+int execute_single_command (char** args, History* h) {
 
     pid_t cpid;
     int status = 1;
@@ -91,15 +91,15 @@ int execute_single_command(char **args, History *h) {
     return flag;
 }
 
-int execute_piped_commands(char **args, int pipe_index, History *h) {
+int execute_piped_commands (char** args, int pipe_index, History* h) {
 
     // TODO make more dynamic
     // only allows for command 1 | command 2
     // instead of "unlimited" chaining
 
     args[pipe_index] = NULL;
-    char **command1 = args;
-    char **command2 = args + pipe_index + 1;
+    char** command1 = args;
+    char** command2 = args + pipe_index + 1;
     int t, flag;
 
     int pipefd[2];
@@ -162,7 +162,7 @@ int execute_piped_commands(char **args, int pipe_index, History *h) {
     return 1;
 }
 
-int execute_output_redirection(char **args, int redirect_index, History *h) {
+int execute_output_redirection (char** args, int redirect_index, History* h) {
 
     pid_t pid = fork();
 
@@ -170,10 +170,7 @@ int execute_output_redirection(char **args, int redirect_index, History *h) {
         perror("fork");
         return 1;
     } else if (pid == 0) {
-        int output_fd = open(
-                args[redirect_index + 1],
-                O_WRONLY | O_CREAT | O_APPEND,
-                0666
+        int output_fd = open(args[redirect_index + 1], O_WRONLY | O_CREAT | O_APPEND, 0666
         );
 
         if (output_fd == -1) {
@@ -216,7 +213,7 @@ int execute_output_redirection(char **args, int redirect_index, History *h) {
     return 0;
 }
 
-int exec_internal_command(char **args, int command, History *h) {
+int exec_internal_command (char** args, int command, History* h) {
 
     switch (command) {
         case CD:
@@ -231,7 +228,8 @@ int exec_internal_command(char **args, int command, History *h) {
     }
 }
 
-void display_command_history(History *h) {
+void display_command_history (History* h) {
+
     for (int i = 0; i != h->history_idx; i++) {
         printf("%s\n", h->history_list[i]);
     }

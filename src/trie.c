@@ -4,16 +4,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-Trie *trie_init(void) {
+Trie* trie_init (void) {
 
-    Trie *t = (Trie *) malloc(sizeof(Trie));
+    Trie* t = (Trie*) malloc(sizeof(Trie));
 
-    t->prefix = (char *) malloc((TRIE_PREFIX_SIZE + 1) * sizeof(char));
+    t->prefix = (char*) malloc((TRIE_PREFIX_SIZE + 1) * sizeof(char));
     memset(t->prefix, '\0', (TRIE_PREFIX_SIZE + 1) * sizeof(char));
 
     t->prefixSize = TRIE_PREFIX_SIZE;
 
-    t->matches = (char **) malloc(sizeof(char *) * TRIE_MATCHES_SIZE);
+    t->matches = (char**) malloc(sizeof(char*) * TRIE_MATCHES_SIZE);
     t->matchesCount = 0;
     t->matchesSize = 1;
 
@@ -24,15 +24,16 @@ Trie *trie_init(void) {
     return t;
 }
 
-void trie_match_set_null(Trie* t, int l, int u) {
-    for(int i = l; i < u; i++) {
+void trie_match_set_null (Trie* t, int l, int u) {
+
+    for (int i = l; i < u; i++) {
         t->matches[i] = NULL;
     }
 }
 
-TrieNode *trie_node_create(void) {
+TrieNode* trie_node_create (void) {
 
-    TrieNode *node = (TrieNode *) malloc(sizeof(TrieNode));
+    TrieNode* node = (TrieNode*) malloc(sizeof(TrieNode));
 
     if (node == NULL) {
         perror("malloc");
@@ -47,9 +48,9 @@ TrieNode *trie_node_create(void) {
     return node;
 }
 
-void trie_insert(TrieNode *root, char *key) {
+void trie_insert (TrieNode* root, char* key) {
 
-    TrieNode *current = root;
+    TrieNode* current = root;
     int len = strlen(key);
 
     for (int level = 0; level < len; level++) {
@@ -63,9 +64,9 @@ void trie_insert(TrieNode *root, char *key) {
     current->is_end = 1;
 }
 
-void trie_search(Trie *t, char *key) {
+void trie_search (Trie* t, char* key) {
 
-    TrieNode *current = t->root;
+    TrieNode* current = t->root;
     int len = strlen(key);
     int prefix_size = len;
 
@@ -75,8 +76,9 @@ void trie_search(Trie *t, char *key) {
             return;
         }
 
-        if (prefix_size >= TRIE_PREFIX_SIZE)
+        if (prefix_size >= TRIE_PREFIX_SIZE) {
             t->prefix = realloc(t->prefix, (prefix_size + 1) * sizeof(char));
+        }
         if (t->prefix == NULL) {
             perror("realloc");
             exit(EXIT_FAILURE);
@@ -91,12 +93,12 @@ void trie_search(Trie *t, char *key) {
     trie_search_helper(current, t, len);
 }
 
-void trie_search_helper(TrieNode *current, Trie *t, int level) {
+void trie_search_helper (TrieNode* current, Trie* t, int level) {
 
     if (current->is_end) {
         if (t->matchesCount + 1 >= TRIE_MATCHES_SIZE * t->matchesSize) {
-            
-            t->matches = realloc(t->matches, ++t->matchesSize * TRIE_MATCHES_SIZE * sizeof(char *));
+
+            t->matches = realloc(t->matches, ++t->matchesSize * TRIE_MATCHES_SIZE * sizeof(char*));
 
             trie_match_set_null(t, t->matchesCount, t->matchesSize * TRIE_MATCHES_SIZE);
         }
@@ -106,9 +108,10 @@ void trie_search_helper(TrieNode *current, Trie *t, int level) {
             exit(EXIT_FAILURE);
         }
 
-        if (t->matches[t->matchesCount] != NULL)
+        if (t->matches[t->matchesCount] != NULL) {
             free(t->matches[t->matchesCount]);
-        t->matches[t->matchesCount++] = strdup(t->prefix); 
+        }
+        t->matches[t->matchesCount++] = strdup(t->prefix);
     }
 
     for (int i = 0; i < CHARACTER_SET_SIZE; i++) {
@@ -120,7 +123,7 @@ void trie_search_helper(TrieNode *current, Trie *t, int level) {
     }
 }
 
-void trie_print_words(TrieNode *root, char *prefix, int level) {
+void trie_print_words (TrieNode* root, char* prefix, int level) {
 
     if (root->is_end) {
         prefix[level] = '\0';
@@ -135,7 +138,8 @@ void trie_print_words(TrieNode *root, char *prefix, int level) {
     }
 }
 
-void trie_free(TrieNode *root) {
+void trie_free (TrieNode* root) {
+
     if (root == NULL) {
         return;
     }

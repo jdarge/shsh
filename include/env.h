@@ -4,14 +4,14 @@
 #include "dtrie.h"
 
 typedef struct PATH {
-    DirecTrie *dt; // todo, find a more appropriate spot
-    char *full;
-    char **parsed;
+    DirecTrie* dt; // todo, find a more appropriate spot
+    char* full;
+    char** parsed;
     unsigned int parsed_count;
 } PATH;
 
 typedef struct ENV {
-    PATH *path;
+    PATH* path;
 } ENV;
 
 #endif

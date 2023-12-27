@@ -11,11 +11,12 @@
 #include "parse.h"
 #include "trie.h"
 
-ENV *env; // TODO
+ENV* env; // TODO
 
-int main(void) {
-    char *line;
-    char **args;
+int main (void) {
+
+    char* line;
+    char** args;
     int status;
 
     /*
@@ -26,42 +27,47 @@ int main(void) {
     char *new_path = malloc(strlen(current_path) + strlen(additional_path) + 2);
     sprintf(new_path, "%s:%s", current_path, additional_path);
     */
-    env = (ENV *) malloc(sizeof(ENV));
-    env->path = (PATH *) malloc(sizeof(PATH));
-    env->path->full = (char *) malloc(sizeof(char) * 256);
+    env = (ENV*) malloc(sizeof(ENV));
+    env->path = (PATH*) malloc(sizeof(PATH));
+    env->path->full = (char*) malloc(sizeof(char) * 256);
 
     strcpy(env->path->full, "/usr/local/bin:/usr/bin");
     parse_env_path(env);
 
     env->path->dt = dtrie_init();
-    for(unsigned i = 0; i < env->path->parsed_count; i++)
+    for (unsigned i = 0; i < env->path->parsed_count; i++) {
         dtrie_insert_directory(env->path->dt, env->path->parsed[i]);
+    }
 
     /*
     TODO: obviously needs to be reworked 
     set up history block
     */
-    History *h = history_init_block();
+    History* h = history_init_block();
 
     do {
 
         signal(SIGINT, ctrlC_handler);
         signal(SIGWINCH, ctrlL_handler);
 
-        if (system("pwd"))
+        if (system("pwd")) {
             return 1;
+        }
         printf("> ");
 
         line = read_line(NULL, 0, env, h);
         args = split_line(line);
         status = shsh_execute(args, h);
 
-        if (line)
+        if (line) {
             free(line);
-        if (args)
+        }
+        if (args) {
             free(args);
-        if (status)
+        }
+        if (status) {
             printf("\n");
+        }
     } while (status);
 
     // Free History
@@ -76,21 +82,26 @@ int main(void) {
     DirecTrie* dt = env->path->dt;
     Trie* t = dt->trie;
     trie_free(t->root);
-    for (int i = 0; i < t->matchesSize * TRIE_MATCHES_SIZE; i++)
-        if(t->matches[i]) free(t->matches[i]);
+    for (int i = 0; i < t->matchesSize * TRIE_MATCHES_SIZE; i++) {
+        if (t->matches[i]) {
+            free(t->matches[i]);
+        }
+    }
     free(t->matches);
     free(t->prefix);
     free(t);
 
-    for (int i = 0; i < dt->dir_count; i++)
+    for (int i = 0; i < dt->dir_count; i++) {
         free(dt->directory[i]);
+    }
     free(dt->directory);
     free(dt);
 
     // Free ENV PATH
     PATH* p = env->path;
-    for(unsigned int i = 0; i < p->parsed_count; i++)
+    for (unsigned int i = 0; i < p->parsed_count; i++) {
         free(p->parsed[i]);
+    }
     free(p->parsed);
     free(p->full);
     free(p);
