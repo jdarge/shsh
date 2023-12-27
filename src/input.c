@@ -86,6 +86,7 @@ char* read_line (char* b, int p, ENV* env, History* h) {
             buffer[position] = '\0';
             printf("\n");
             return buffer;
+
         } else if (c == 27) {
             char o = get_char();
             if (o == 91) {
@@ -105,6 +106,7 @@ char* read_line (char* b, int p, ENV* env, History* h) {
                         break;
                 }
             }
+
         } else if (c == BACKSPACE) {
             if (position > 0) {
                 position--;
@@ -112,6 +114,7 @@ char* read_line (char* b, int p, ENV* env, History* h) {
                 printf("\r> %s ", buffer);
                 erase_buffer(1);
             }
+
         } else {
             if (!ctrl_c_pressed) {
                 buffer[position] = (char) c;
@@ -207,8 +210,6 @@ void ctrlL_handler (int signum) {
 
     (void) signum;
 
-    printf("\n\n:)\n");
-
     printf("\033[2J\033[H");
     fflush(stdout);
 }
@@ -301,6 +302,7 @@ char* tab_completion (char* partial_input, int pos, ENV* env) {
                 }
             }
         }
+        
         return NULL;
     }
 

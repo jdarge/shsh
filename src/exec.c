@@ -80,6 +80,7 @@ int execute_single_command (char** args, History* h) {
             flag = 0;
             exit(EXIT_FAILURE);
         }
+
     } else if (cpid < 0) {
         perror("fork");
         flag = 0;
@@ -127,6 +128,7 @@ int execute_piped_commands (char** args, int pipe_index, History* h) {
         if (t < 0) {
             exit(EXIT_FAILURE);
         }
+
     } else if (pid1 < 0) {
         perror("fork");
         exit(EXIT_FAILURE);
@@ -148,6 +150,7 @@ int execute_piped_commands (char** args, int pipe_index, History* h) {
         if (t < 0) {
             exit(EXIT_FAILURE);
         }
+
     } else if (pid2 < 0) {
         perror("fork");
         exit(EXIT_FAILURE);
@@ -169,6 +172,7 @@ int execute_output_redirection (char** args, int redirect_index, History* h) {
     if (pid == -1) {
         perror("fork");
         return 1;
+
     } else if (pid == 0) {
         int output_fd = open(args[redirect_index + 1], O_WRONLY | O_CREAT | O_APPEND, 0666
         );
@@ -195,6 +199,7 @@ int execute_output_redirection (char** args, int redirect_index, History* h) {
             perror("execvp");
             return 1;
         }
+        
     } else {
         int status;
         if (waitpid(pid, &status, 0) == -1) {

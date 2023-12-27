@@ -27,10 +27,8 @@ void cd_home (void) {
     const char* home = getenv("HOME");
     if (!home) {
         perror("The HOME environment variable is not set.");
-    } else {
-        if (chdir(home) != 0) {
+    } else if (chdir(home) != 0) {
             perror("chdir");
-        }
     }
 }
 
@@ -49,14 +47,10 @@ int cd (char** args) {
 
     if (p.we_wordc != 1) {
         perror("Invalid directory specification.");
-    } else {
-        if (strcmp(p.we_wordv[0], "~") == 0) {
-            cd_home();
-        } else {
-            if (chdir(p.we_wordv[0]) != 0) {
-                perror("chdir");
-            }
-        }
+    } else if (strcmp(p.we_wordv[0], "~") == 0) {
+        cd_home();
+    } else if (chdir(p.we_wordv[0]) != 0) {
+        perror("chdir");
     }
 
     wordfree(&p);
