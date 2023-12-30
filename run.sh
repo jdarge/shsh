@@ -12,10 +12,10 @@ elif [ "$1" = "rebuild" ]; then
 elif [ "$1" = "clean" ]; then
   rm -rf build/
 elif [ "$1" = "help" ]; then
-  echo -e "Build project:\t ./run build"
-  echo -e "Rebuild project: ./run rebuild"
-  echo -e "Clean project:\t ./run clean"
-  echo -e "Run project:\t ./run"
+  echo "Build project:   ./run build"
+  echo "Rebuild project: ./run rebuild"
+  echo "Clean project:   ./run clean"
+  echo "Run project:     ./run"
 else
   if [ -e build/bin/$project ]; then
     exec build/bin/$project "$@"

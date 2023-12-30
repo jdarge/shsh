@@ -5,7 +5,6 @@
 #include "env.h"
 #include "history.h"
 
-#include <dirent.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,34 +16,42 @@ volatile int ctrl_c_pressed = 0;
 
 pthread_t input_thread;
 
-char* read_line (char* b, int p, ENV* env, History* h) {
-
+char*
+read_line (char* b, int p, ENV* env, History* h)
+{
     int buffsize = 1024;
     int position = 0;
     char* buffer;
     int c;
-    int local_history_idx = h->history_idx;
+    int local_history_idx = h->index;
 
-    if (b) {
-
+    if (b)
+    {
         buffer = b;
         position = p;
 
         printf("\n");
-        if (system("pwd")) {
+        if (system("pwd"))
+        {
             free(buffer);
             return NULL;
         }
 
-        if (b[0] && p != 0) {
+        if (b[0] && p != 0)
+        {
             printf("> %s", buffer);
-        } else {
+        }
+        else
+        {
             printf("> ");
         }
 
-    } else {
+    }
+    else
+    {
         buffer = malloc(sizeof(char) * buffsize);
-        if (!buffer) {
+        if (!buffer)
+        {
             fprintf(stderr, "%sshsh: Allocation error%s\n", RED, RESET);
             exit(EXIT_FAILURE);
         }
@@ -52,11 +59,12 @@ char* read_line (char* b, int p, ENV* env, History* h) {
 
     pthread_create(&input_thread, NULL, input_thread_function, &c);
 
-    while (1) {
-
+    while (1)
+    {
         pthread_join(input_thread, NULL);
 
-        if (ctrl_c_pressed) {
+        if (ctrl_c_pressed)
+        {
             //pthread_cancel(input_thread);
             ctrl_c_pressed = 0;
 
@@ -66,11 +74,13 @@ char* read_line (char* b, int p, ENV* env, History* h) {
             return NULL;
         }
 
-        if (c == '\t') { // TODO!!!! need to use finish tab_comp and use char* comp
+        if (c == '\t')
+        {   // TODO!!!! need to use finish tab_comp and use char* comp
 
             char* completion = tab_completion(buffer, position, env);
 
-            if (!completion) {
+            if (!completion)
+            {
                 printf("\n");
                 return read_line(buffer, position, env, h);
             }
@@ -79,24 +89,30 @@ char* read_line (char* b, int p, ENV* env, History* h) {
 
         }
 
-        if (c == EOF || c == '\n') {
-            if (position == 0) {
+        if (c == EOF || c == '\n')
+        {
+            if (position == 0)
+            {
                 goto next;
             }
+
             buffer[position] = '\0';
             printf("\n");
             return buffer;
-
-        } else if (c == 27) {
-            char o = get_char();
-            if (o == 91) {
+        }
+        else if (c == 27)
+        {
+            char o = (char) get_char();
+            if (o == 91)
+            {
                 int arrow_key = get_char();
-                switch (arrow_key) {
+                switch (arrow_key)
+                {
                     case UP_ARROW:
-                        handle_up_arrow(h->history_list, buffer, &local_history_idx, &position);
+                        handle_up_arrow(h->list, buffer, &local_history_idx, &position);
                         break;
                     case DOWN_ARROW:
-                        handle_down_arrow(h->history_list, buffer, &local_history_idx, &position, h->history_idx);
+                        handle_down_arrow(h->list, buffer, &local_history_idx, &position, h->index);
                         break;
                     case RIGHT_ARROW:
                         handle_right_arrow(&position, (int) strlen(buffer));
@@ -106,17 +122,21 @@ char* read_line (char* b, int p, ENV* env, History* h) {
                         break;
                 }
             }
-
-        } else if (c == BACKSPACE) {
-            if (position > 0) {
+        }
+        else if (c == BACKSPACE)
+        {
+            if (position > 0)
+            {
                 position--;
                 buffer[position] = '\0';
                 printf("\r> %s ", buffer);
                 erase_buffer(1);
             }
-
-        } else {
-            if (!ctrl_c_pressed) {
+        }
+        else
+        {
+            if (!ctrl_c_pressed)
+            {
                 buffer[position] = (char) c;
                 position++;
                 buffer[position] = '\0';
@@ -124,14 +144,17 @@ char* read_line (char* b, int p, ENV* env, History* h) {
             }
         }
 
-        if (position >= buffsize - 1) {
+        if (position >= buffsize - 1)
+        {
             buffsize += 1024;
-            buffer = realloc(buffer, buffsize);
 
-            if (!buffer) {
+            char* tmp = realloc(buffer, buffsize);
+            if (!tmp)
+            {
                 fprintf(stderr, "shsh: Allocation error\n");
                 exit(EXIT_FAILURE);
             }
+            buffer = tmp;
         }
 
         next:
@@ -139,15 +162,18 @@ char* read_line (char* b, int p, ENV* env, History* h) {
     }
 }
 
-void erase_buffer (int count) {
-
-    for (int i = 0; i < count; i++) {
+void
+erase_buffer (int count)
+{
+    for (int i = 0; i < count; i++)
+    {
         printf("\b \b");
     }
 }
 
-int get_char (void) {
-
+int
+get_char (void)
+{
     int ch;
     struct termios oldt, newt;
     tcgetattr(STDIN_FILENO, &oldt);
@@ -159,9 +185,11 @@ int get_char (void) {
     return ch;
 }
 
-void handle_up_arrow (char** list, char* buffer, int* local_history_idx, int* position) {
-
-    if (*local_history_idx - 1 >= 0) {
+void
+handle_up_arrow (char** list, char* buffer, int* local_history_idx, int* position)
+{
+    if (*local_history_idx - 1 >= 0)
+    {
         erase_buffer(*position);
         strcpy(buffer, list[--(*local_history_idx)]);
         *position = (int) strlen(buffer);
@@ -169,9 +197,11 @@ void handle_up_arrow (char** list, char* buffer, int* local_history_idx, int* po
     }
 }
 
-void handle_down_arrow (char** list, char* buffer, int* local_history_idx, int* position, int limit) {
-
-    if (*local_history_idx + 1 <= limit - 1) {
+void
+handle_down_arrow (char** list, char* buffer, int* local_history_idx, int* position, int limit)
+{
+    if (*local_history_idx + 1 <= limit - 1)
+    {
         erase_buffer(*position);
         strcpy(buffer, list[++(*local_history_idx)]);
         *position = (int) strlen(buffer);
@@ -179,24 +209,29 @@ void handle_down_arrow (char** list, char* buffer, int* local_history_idx, int* 
     }
 }
 
-void handle_right_arrow (int* position, int buffer_length) {
-
-    if (*position + 1 <= buffer_length) {
+void
+handle_right_arrow (int* position, int buffer_length)
+{
+    if (*position + 1 <= buffer_length)
+    {
         printf("\033[1C");
         (*position)++;
     }
 }
 
-void handle_left_arrow (int* position) {
-
-    if (*position - 1 >= 0) {
+void
+handle_left_arrow (int* position)
+{
+    if (*position - 1 >= 0)
+    {
         printf("\033[1D");
         (*position)--;
     }
 }
 
-void ctrlC_handler (int signum) {
-
+void
+ctrlC_handler (int signum)
+{
     (void) signum;
 
     ctrl_c_pressed = 1;
@@ -206,22 +241,26 @@ void ctrlC_handler (int signum) {
     pthread_cancel(input_thread);
 }
 
-void ctrlL_handler (int signum) {
-
+void
+ctrlL_handler (int signum)
+{
     (void) signum;
 
     printf("\033[2J\033[H");
     fflush(stdout);
 }
 
-void* input_thread_function (void* arg) {
-
+void*
+input_thread_function (void* arg)
+{
     int* result = (int*) arg;
     *result = get_char();
     return NULL;
 }
 
-char* tab_completion (char* partial_input, int pos, ENV* env) {
+char*
+tab_completion (char* partial_input, int pos, ENV* env)
+{
 
     /*
         RETURN:
@@ -288,21 +327,27 @@ char* tab_completion (char* partial_input, int pos, ENV* env) {
     (void) pos;
 
     // TODO: this should only be done if there's no command called previous
-    DirecTrie* d = env->path->dt;
+    DTrie* d = env->path->dt;
     dtrie_search(d, partial_input);
-    if (d->trie->matchesCount == 1) {
+    if (d->trie->matchesCount == 1)
+    {
         return d->trie->matches[0];
-    } else {// 0 || >1
-        if (d->trie->matchesCount != 0) {
+    }
+    else
+    {// 0 || >1
+        if (d->trie->matchesCount != 0)
+        {
             printf("\n");
-            for (int i = 0; i < d->trie->matchesCount; i++) {
+            for (int i = 0; i < d->trie->matchesCount; i++)
+            {
                 printf("%-25s", strrchr(d->trie->matches[i], '/') + 1);
-                if ((i + 1) % 3 == 0 || i == d->trie->matchesCount - 1) {
+                if ((i + 1) % 3 == 0 || i == d->trie->matchesCount - 1)
+                {
                     printf("\n");
                 }
             }
         }
-        
+
         return NULL;
     }
 

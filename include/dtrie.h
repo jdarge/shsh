@@ -3,14 +3,20 @@
 
 #include "trie.h"
 
-typedef struct DirecTrie {
+typedef struct DTrie
+{
     struct Trie* trie;
     char** directory;
     int dir_count;
-} DirecTrie;
+} DTrie;
 
-DirecTrie* dtrie_init (void);
-void dtrie_insert_directory (DirecTrie* d, char* dirPath);
-void dtrie_search (DirecTrie* d, char* key);
+DTrie*
+dtrie_init (void);
+
+void
+dtrie_insert_directory (DTrie* d, char* dirPath);
+
+void
+dtrie_search (DTrie* d, char* key);
 
 #endif

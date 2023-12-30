@@ -7,9 +7,10 @@
 #include <dirent.h>
 #include <limits.h>
 
-DirecTrie* dtrie_init (void) {
-
-    DirecTrie* d = (DirecTrie*) malloc(sizeof(DirecTrie));
+DTrie*
+dtrie_init (void)
+{
+    DTrie* d = (DTrie*) malloc(sizeof(DTrie));
 
     d->directory = NULL;
     d->dir_count = 0;
@@ -19,18 +20,22 @@ DirecTrie* dtrie_init (void) {
     return d;
 }
 
-void dtrie_insert_directory (DirecTrie* d, char* dirPath) {
-
+void
+dtrie_insert_directory (DTrie* d, char* dirPath)
+{
     DIR* directory;
     struct dirent* entry;
 
-    if ((directory = opendir(dirPath)) == NULL) {
+    if ((directory = opendir(dirPath)) == NULL)
+    {
         perror("opendir");
         return;
     }
 
-    while ((entry = readdir(directory)) != NULL) {
-        if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {
+    while ((entry = readdir(directory)) != NULL)
+    {
+        if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
+        {
             char filePath[PATH_MAX];
             snprintf(filePath, sizeof(filePath), "%s/%s", dirPath, entry->d_name);
 
@@ -45,21 +50,32 @@ void dtrie_insert_directory (DirecTrie* d, char* dirPath) {
     closedir(directory);
 
 
-    d->directory = realloc(d->directory, (d->dir_count + 1) * sizeof(char*));
+    char** tmp = realloc(d->directory, (d->dir_count + 1) * sizeof(char*));
+    if (!tmp)
+    {
+        // TODO
+    }
+    else
+    {
+        d->directory = tmp;
+    }
     d->directory[d->dir_count] = (char*) malloc(strlen(dirPath) + 1);
     strcpy(d->directory[d->dir_count], dirPath);
     d->dir_count++;
 }
 
-void dtrie_search (DirecTrie* d, char* key) {
-
+void
+dtrie_search (DTrie* d, char* key)
+{
     char* path = (char*) calloc(TRIE_PREFIX_SIZE, sizeof(char));
     d->trie->matchesCount = 0;
 
-    for (int i = 0; i < d->dir_count; i++) {
+    for (int i = 0; i < d->dir_count; i++)
+    {
 
         strcpy(path, d->directory[i]);
-        if (path[strlen(d->directory[i]) - 1] != '/') {
+        if (path[strlen(d->directory[i]) - 1] != '/')
+        {
             strcat(path, "/");
         }
 
