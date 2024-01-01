@@ -51,6 +51,7 @@ dtrie_insert_directory (DTrie* d, char* dirPath)
 
 
     char** tmp = realloc(d->directory, (d->dir_count + 1) * sizeof(char*));
+    
     if (!tmp)
     {
         // TODO
@@ -59,6 +60,7 @@ dtrie_insert_directory (DTrie* d, char* dirPath)
     {
         d->directory = tmp;
     }
+    
     d->directory[d->dir_count] = (char*) malloc(strlen(dirPath) + 1);
     strcpy(d->directory[d->dir_count], dirPath);
     d->dir_count++;
