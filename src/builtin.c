@@ -36,7 +36,6 @@ cd_home (void)
     {
         perror("The HOME environment variable is not set.");
     }
-
     else if (chdir(home) != 0)
     {
         perror("chdir");
