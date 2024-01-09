@@ -341,7 +341,7 @@ tab_completion (char* partial_input, int pos, ENV* env)
             for (int i = 0; i < d->trie->matchesCount; i++)
             {
                 printf("%-25s", strrchr(d->trie->matches[i], '/') + 1);
-                if ((i + 1) % 3 == 0 || i == d->trie->matchesCount - 1)
+                if ((i + 1) % 3 == 0 && i != d->trie->matchesCount - 1)
                 {
                     printf("\n");
                 }
