@@ -205,8 +205,7 @@ execute_output_redirection (char** args, int redirect_index, History* h)
 
     else if (pid == 0)
     {
-        int output_fd = open(args[redirect_index + 1], O_WRONLY | O_CREAT | O_APPEND, 0666
-        );
+        int output_fd = open(args[redirect_index + 1], O_WRONLY | O_CREAT | O_APPEND, 0666);
 
         if (output_fd == -1)
         {
