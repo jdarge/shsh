@@ -45,7 +45,6 @@ read_line (char* b, int p, ENV* env, History* h)
         {
             printf("> ");
         }
-
     }
     else
     {
@@ -65,28 +64,49 @@ read_line (char* b, int p, ENV* env, History* h)
 
         if (ctrl_c_pressed)
         {
-            //pthread_cancel(input_thread);
             ctrl_c_pressed = 0;
 
-            erase_buffer(position);
+            printf("\r> %s", buffer);
+            printf("^C\n");
 
             free(buffer);
             return NULL;
         }
 
         if (c == '\t')
-        {   // TODO!!!! need to use finish tab_comp and use char* comp
-
+        {
             char* completion = tab_completion(buffer, position, env);
 
-            if (!completion)
-            {
-                printf("\n");
-                return read_line(buffer, position, env, h);
+            if (completion) {
+                char* last_part = strrchr(completion, '/');
+                if (last_part) {
+                    last_part++;
+                } else {
+                    last_part = completion;
+                }
+
+                int common_len = position;
+                if (strncmp(buffer, last_part, common_len) == 0) {
+                    char* remaining_part = last_part + common_len;
+
+                    int remaining_len = strlen(remaining_part);
+                    if (position < strlen(buffer)) {
+                        memmove(
+                            buffer + position + remaining_len, 
+                            buffer + position, 
+                            strlen(buffer) - position + 1
+                        );
+                    }
+
+                    strncpy(buffer + position, remaining_part, remaining_len);
+
+                    position += remaining_len;
+                }
             }
 
-            // TODO: replace partial with returned word and update pos
-
+            printf("\n");
+            pthread_join(input_thread, NULL);
+            return read_line(buffer, position, env, h);
         }
 
         if (c == EOF || c == '\n')
@@ -96,12 +116,11 @@ read_line (char* b, int p, ENV* env, History* h)
                 goto next;
             }
 
-            // buffer[position] = '\0';
             printf("\n");
             return buffer;
         }
         else if (c == 27)
-        {
+        {   // TODO! add ctrl + L/R Arrow handler to jump around whitespace
             char o = (char) get_char();
             if (o == 91)
             {
@@ -122,6 +141,13 @@ read_line (char* b, int p, ENV* env, History* h)
                         break;
                 }
             }
+        } else if (c == CTRL_L)
+        {
+            printf("\033[H\033[2J"); 
+            printf("\n");
+            fflush(stdout);
+            system("pwd");
+            printf("\r> %s", buffer);
         }
         else if (c == BACKSPACE)
         {
@@ -134,13 +160,14 @@ read_line (char* b, int p, ENV* env, History* h)
                 printf("\r> %s", buffer);
                 printf(" \b");
                 for (int i = 0; i < len_after_cursor; i++)
-                {// FIXME: modify erase_buffer, or write a new function and provide erase_buffer with a more explicit name
+                {
                     printf("\b");
                 }
             }
         }
+        // TODO! add HOME/END key handler
         else
-        {
+        {   // Ran through all checks
             if (!ctrl_c_pressed)
             {
                 if (position < (int) strlen(buffer))
@@ -154,7 +181,7 @@ read_line (char* b, int p, ENV* env, History* h)
 
                 int len_after_cursor = (int) strlen(buffer) - position;
                 for (int i = 0; i < len_after_cursor; i++)
-                {// FIXME: modify erase_buffer, or write a new function and provide erase_buffer with a more explicit name
+                {
                     printf("\b");
                 }
             }
@@ -171,10 +198,6 @@ read_line (char* b, int p, ENV* env, History* h)
                 exit(EXIT_FAILURE);
             }
 
-            // for (int i = position; i < buffsize; i++) 
-            // {
-            //     tmp[i] = '\0';
-            // }
             memset(tmp + position, '\0', buffsize - position);
 
             buffer = tmp;
@@ -257,20 +280,9 @@ ctrlC_handler (int signum)
 {
     (void) signum;
 
-    ctrl_c_pressed = 1;
-    printf("^C\n");
-    fflush(stdout);
+    ctrl_c_pressed = 1;    
 
     pthread_cancel(input_thread);
-}
-
-void
-ctrlL_handler (int signum)
-{
-    (void) signum;
-
-    printf("\033[2J\033[H");
-    fflush(stdout);
 }
 
 void*
@@ -285,129 +297,26 @@ char*
 tab_completion (char* partial_input, int pos, ENV* env)
 {
 
-    /*
-        RETURN:
-            NO HIT: 
-                return NULL
-            MULTI HIT:
-                print all available
-                return NULL
-            SINGLE HIT: 
-                update 'word' right before pos
-                return corrected string at pos
-    */
-    /*
-        POSSIBLE DIRS:
-            .
-            PATH (
-                /usr/local/bin
-                /usr/bin
-                /bin
-            )            
-    */
-    /*
-        1. tokenize partial_input until we get to pos
-            i.e.
-            cat mai\t
-            mai
-        2. run main against PATH and CWD
-        3. if theres matches put them inside char** hits
-        4. print values in hits
-            i.e.
+    // TODO! this should only be done if there's no command called previous
 
-            > ls\t
-            ls                  lsipc               lspci 
-
-            > ls
-
-        a. perhaps use $column to make this print
-        5. on multiple hits NOTHING should be done
-        6. if theres only one hit, complete and return
-    */
-    /*
-        ADDITIONAL NOTES:
-            > ls\t
-            ls                  lsipc           lspci
-
-            > ls \t
-            main.c     README.md  run.sh     shsh 
-        
-        notice how context changes based on what's available
-
-        perhaps in cases where its 
-        cat main.c | grep \t 
-        first tokenize string
-            cat,main.c,|,grep,\t
-        figure where pos is (\t)
-        discount all strings prior to main command like... 
-        grep,\t
-        if grep is in /.../bin
-        show dir context
-        if it's the first command
-        show bin context
-    */
-
-    (void) pos;
-
-    // TODO: this should only be done if there's no command called previous
     DTrie* d = env->path->dt;
     dtrie_search(d, partial_input);
     if (d->trie->matchesCount == 1)
     {
         return d->trie->matches[0];
     }
-    else
-    {// 0 || >1
-        if (d->trie->matchesCount != 0)
+    else if (d->trie->matchesCount != 0)
+    {
+        printf("\n");
+        for (int i = 0; i < d->trie->matchesCount; i++)
         {
-            printf("\n");
-            for (int i = 0; i < d->trie->matchesCount; i++)
+            printf("%-25s", strrchr(d->trie->matches[i], '/') + 1);
+            if ((i + 1) % 3 == 0 && i != d->trie->matchesCount - 1)
             {
-                printf("%-25s", strrchr(d->trie->matches[i], '/') + 1);
-                if ((i + 1) % 3 == 0 && i != d->trie->matchesCount - 1)
-                {
-                    printf("\n");
-                }
+                printf("\n");
             }
         }
-
-        return NULL;
     }
 
-    // TODO: if command called previous check only CWD
-    //  (dont bother with trie & include subdir)
+    return NULL;
 }
-
-/*  TAB COMPLETION
-
-    DIR *dir;
-    struct dirent *ent;
-    char *completion = NULL;
-
-    if ((dir = opendir(".")) == NULL) {
-        perror("opendir");
-        return NULL;
-    }
-
-    while ((ent = readdir(dir)) != NULL) {
-        if (strncmp(ent->d_name, partial_input, strlen(partial_input)) == 0) {
-            if (!completion) {
-                completion = strdup(ent->d_name);
-            } else {
-                size_t i;
-                for (i = 0; i < strlen(completion) && i < strlen(ent->d_name); i++) {
-                    if (completion[i] != ent->d_name[i]) {
-                        break;
-                    }
-                }
-
-                completion[i] = '\0';
-                break;
-            }
-        }
-    }
-    closedir(dir);
-
-    if (NULL) {
-    }
-*/

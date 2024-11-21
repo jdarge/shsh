@@ -13,6 +13,8 @@
 
 #define BACKSPACE 127
 
+#define CTRL_L 0x0C
+
 extern volatile int ctrl_c_pressed;
 
 extern pthread_t input_thread;

@@ -52,7 +52,7 @@ main (void)
     {
 
         signal(SIGINT, ctrlC_handler);
-        signal(SIGWINCH, ctrlL_handler);
+        // signal(SIGWINCH, ...); // FIXME: SIGWINCH = resize handler
 
         if (system("pwd"))
         {
