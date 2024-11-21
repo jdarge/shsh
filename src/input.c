@@ -49,7 +49,7 @@ read_line (char* b, int p, ENV* env, History* h)
     }
     else
     {
-        buffer = malloc(sizeof(char) * buffsize);
+        buffer = calloc(0, sizeof(char) * buffsize);
         if (!buffer)
         {
             fprintf(stderr, "%sshsh: Allocation error%s\n", RED, RESET);
@@ -96,7 +96,7 @@ read_line (char* b, int p, ENV* env, History* h)
                 goto next;
             }
 
-            buffer[position] = '\0';
+            // buffer[position] = '\0';
             printf("\n");
             return buffer;
         }
@@ -128,19 +128,35 @@ read_line (char* b, int p, ENV* env, History* h)
             if (position > 0)
             {
                 position--;
-                buffer[position] = '\0';
-                printf("\r> %s ", buffer);
-                erase_buffer(1);
+                memmove(buffer + position, buffer + position + 1, strlen(buffer) - position);
+                int len_after_cursor = (int) strlen(buffer) - position;
+
+                printf("\r> %s", buffer);
+                printf(" \b");
+                for (int i = 0; i < len_after_cursor; i++)
+                {// FIXME: modify erase_buffer, or write a new function and provide erase_buffer with a more explicit name
+                    printf("\b");
+                }
             }
         }
         else
         {
             if (!ctrl_c_pressed)
             {
+                if (position < (int) strlen(buffer))
+                {
+                    memmove(buffer + position + 1, buffer + position, strlen(buffer) - position + 1);
+                }
+
                 buffer[position] = (char) c;
                 position++;
-                buffer[position] = '\0';
                 printf("\r> %s", buffer);
+
+                int len_after_cursor = (int) strlen(buffer) - position;
+                for (int i = 0; i < len_after_cursor; i++)
+                {// FIXME: modify erase_buffer, or write a new function and provide erase_buffer with a more explicit name
+                    printf("\b");
+                }
             }
         }
 
@@ -154,6 +170,13 @@ read_line (char* b, int p, ENV* env, History* h)
                 fprintf(stderr, "shsh: Allocation error\n");
                 exit(EXIT_FAILURE);
             }
+
+            // for (int i = position; i < buffsize; i++) 
+            // {
+            //     tmp[i] = '\0';
+            // }
+            memset(tmp + position, '\0', buffsize - position);
+
             buffer = tmp;
         }
 

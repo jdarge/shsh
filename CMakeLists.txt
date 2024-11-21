@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24.2)
+cmake_minimum_required(VERSION 3.18.4)
 
 # Setting a variable to use for both the project name and the resulting binary executable
 set(REPO shsh)
@@ -42,4 +42,4 @@ set(CMAKE_BINARY_DIR ${PROJECT_SOURCE_DIR}/build/cmake)
 include_directories(${PROJECT_SOURCE_DIR}/build/cmake)
 
 # Add any other dependencies here, such as libraries or additional build options
-
+target_link_libraries(shsh pthread) # Debian (skill) issue
