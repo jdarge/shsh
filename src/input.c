@@ -141,7 +141,8 @@ read_line (char* b, int p, ENV* env, History* h)
                         break;
                 }
             }
-        } else if (c == CTRL_L)
+        } 
+        else if (c == CTRL_L)
         {
             printf("\033[H\033[2J"); 
             printf("\n");
