@@ -5,46 +5,36 @@
 #define TRIE_PREFIX_SIZE 256
 #define TRIE_MATCHES_SIZE 256
 
-typedef struct TrieNode
-{
-    struct TrieNode* children[CHARACTER_SET_SIZE];
+typedef struct TrieNode {
+    struct TrieNode *children[CHARACTER_SET_SIZE];
     int is_end;
 } TrieNode;
 
-typedef struct Trie
-{
-    struct TrieNode* root;
+typedef struct Trie {
+    struct TrieNode *root;
 
-    char* prefix;
+    char *prefix;
     int prefixSize;
 
-    char** matches;
+    char **matches;
     int matchesCount;
     int matchesSize;
 } Trie;
 
-Trie*
-trie_init (void);
+Trie *trie_init(void);
 
-void
-trie_match_set_null (Trie* t, int l, int u);
+void trie_match_set_null(Trie *t, int l, int u);
 
-TrieNode*
-trie_node_create (void);
+TrieNode *trie_node_create(void);
 
-void
-trie_insert (TrieNode* root, char* key);
+void trie_insert(TrieNode *root, char *key);
 
-void
-trie_search (Trie* t, char* key);
+void trie_search(Trie *t, char *key);
 
-void
-trie_search_helper (TrieNode* current, Trie* t, unsigned long level);
+void trie_search_helper(TrieNode *current, Trie *t, unsigned long level);
 
-void
-trie_print_words (TrieNode* root, char* prefix, unsigned long level);
+void trie_print_words(TrieNode *root, char *prefix, unsigned long level);
 
-void
-trie_free (TrieNode* root);
+void trie_free(TrieNode *root);
 
 #endif

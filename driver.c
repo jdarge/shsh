@@ -12,14 +12,13 @@
 #include "parse.h"
 #include "trie.h"
 
-ENV* env; // TODO
+ENV *env; // TODO
 
 int
-main (void)
-{
+main(void) {
 
-    char* line;
-    char** args;
+    char *line;
+    char **args;
     int status;
     char cwd[256];
 
@@ -31,16 +30,15 @@ main (void)
     char *new_path = malloc(strlen(current_path) + strlen(additional_path) + 2);
     sprintf(new_path, "%s:%s", current_path, additional_path);
     */
-    env = (ENV*) malloc(sizeof(ENV));
-    env->path = (PATH*) malloc(sizeof(PATH));
-    env->path->full = (char*) malloc(sizeof(char) * 256);
+    env = (ENV *) malloc(sizeof(ENV));
+    env->path = (PATH *) malloc(sizeof(PATH));
+    env->path->full = (char *) malloc(sizeof(char) * 256);
 
     strcpy(env->path->full, "/usr/local/bin:/usr/bin");
     parse_env_path(env);
 
     env->path->dt = dtrie_init();
-    for (unsigned i = 0; i < env->path->parsed_count; i++)
-    {
+    for (unsigned i = 0; i < env->path->parsed_count; i++) {
         dtrie_insert_directory(env->path->dt, env->path->parsed[i]);
     }
 
@@ -48,56 +46,48 @@ main (void)
     TODO: obviously needs to be reworked 
     set up history block
     */
-    History* h = history_init_block();
+    History *h = history_init_block();
 
-    do
-    {
+    do {
 
         signal(SIGINT, ctrlC_handler);
         // signal(SIGWINCH, ...); // FIXME: SIGWINCH = resize handler
 
-        if (getcwd(cwd, sizeof(cwd)) == 0) 
-        {
+        if (getcwd(cwd, sizeof(cwd)) == 0) {
             return 1;
         }
-        
+
         printf("%s%s%s\n> ", RED, cwd, RESET);
 
         line = read_line(NULL, 0, env, h, 0);
         args = split_line(line);
         status = shsh_execute(args, h);
 
-        if (line)
-        {
+        if (line) {
             free(line);
         }
-        if (args)
-        {
+        if (args) {
             free(args);
         }
-        if (status)
-        {
+        if (status) {
             printf("\n");
         }
     } while (status);
 
     // Free History
-    char** hl = h->list;
-    for (int i = 0; i < h->index; i++)
-    {
+    char **hl = h->list;
+    for (int i = 0; i < h->index; i++) {
         free(hl[i]);
     }
     free(hl);
     free(h);
 
     // Free ENV PATH DT
-    DTrie* dt = env->path->dt;
-    Trie* t = dt->trie;
+    DTrie *dt = env->path->dt;
+    Trie *t = dt->trie;
     trie_free(t->root);
-    for (int i = 0; i < t->matchesSize * TRIE_MATCHES_SIZE; i++)
-    {
-        if (t->matches[i])
-        {
+    for (int i = 0; i < t->matchesSize * TRIE_MATCHES_SIZE; i++) {
+        if (t->matches[i]) {
             free(t->matches[i]);
         }
     }
@@ -105,17 +95,15 @@ main (void)
     free(t->prefix);
     free(t);
 
-    for (int i = 0; i < dt->dir_count; i++)
-    {
+    for (int i = 0; i < dt->dir_count; i++) {
         free(dt->directory[i]);
     }
     free(dt->directory);
     free(dt);
 
     // Free ENV PATH
-    PATH* p = env->path;
-    for (unsigned int i = 0; i < p->parsed_count; i++)
-    {
+    PATH *p = env->path;
+    for (unsigned int i = 0; i < p->parsed_count; i++) {
         free(p->parsed[i]);
     }
     free(p->parsed);
