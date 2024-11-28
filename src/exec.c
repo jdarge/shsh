@@ -11,6 +11,19 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+/*
+
+    Modify to allow: 
+        longer pipe chaining 
+        && the execution of the next command only if the previous passes
+        ;  the execution of the next command regardless if the previous passes or not
+        << 
+        >>  
+        <   
+        >   
+
+*/
+
 int
 shsh_execute (char** args, History* h)
 {
