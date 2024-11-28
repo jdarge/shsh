@@ -24,7 +24,7 @@ shsh_execute (char** args, History* h)
         return 0;
     }
 
-    char* original = concatenate_strings(args);
+    char* original = concatenate_strings(args); // combines char* args[] and appends spaces between indexes
     int flag;
 
     int pipe_index = -1;
@@ -56,15 +56,13 @@ shsh_execute (char** args, History* h)
     if (output_redirect_index >= 0)
     {
         int eor_code = execute_output_redirection(args, output_redirect_index, h);
-        (void) eor_code;
         goto history;
     }
 
     flag = execute_single_command(args, h);
-    (void) flag;
 
     history: // TODO lazy fix
-    history_append(original, h);
+    history_append(original, h); // adds the concatenated "original" command to the history list
 
     return 1;
 }
@@ -74,7 +72,7 @@ execute_single_command (char** args, History* h)
 {
     pid_t cpid;
     int status = 1;
-    int flag = get_internal_command(args);
+    int flag = get_internal_command(args); // currently checks to see if args is either "!!", "cd", "history"
 
     if (flag)
     {
@@ -228,8 +226,6 @@ execute_output_redirection (char** args, int redirect_index, History* h)
         args[redirect_index] = NULL;
         if (execvp(args[0], args) == -1)
         {
-            // TODO: 
-            (void) h;
             perror("execvp");
             return 1;
         }
