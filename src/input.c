@@ -15,48 +15,47 @@
 volatile int ctrl_c_pressed = 0;
 
 pthread_t input_thread;
+pthread_mutex_t ctrl_c_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 char*
-read_line (char* b, int p, ENV* env, History* h)
+read_line (char* buffer_input, int position_input, ENV* env, History* history, int flag)
 {
     int buffsize = 1024;
     int position = 0;
+    int local_history_idx = history->index;
+    char cwd[256];
     char* buffer;
-    int c;
-    int local_history_idx = h->index;
+    int current_user_input;
 
-    if (b)
+    if (buffer_input)
     {
-        buffer = b;
-        position = p;
+        buffer = buffer_input;
+        position = position_input;
+        buffsize = (int)(position/1024) * 1024;
 
-        printf("\n");
-        if (system("pwd"))
-        {
+        if (getcwd(cwd, sizeof(cwd)) == 0) {
             free(buffer);
             return NULL;
         }
 
-        if (b[0] && p != 0)
-        {
-            printf("> %s", buffer);
-        }
-        else
-        {
-            printf("> ");
+        if (flag & SKIP_CWD) {
+            print_buffer(buffer);
+        } else if (buffer_input[0] && position_input != 0) {
+            printf("\n%s%s%s\n> %s", RED, cwd, RESET, buffer);
+        } else {
+            printf("\n%s%s%s\n> ", RED, cwd, RESET);
         }
     }
     else
     {
-        buffer = calloc(0, sizeof(char) * buffsize);
-        if (!buffer)
-        {
+        buffer = calloc(buffsize, sizeof(char));
+        if (!buffer) {
             fprintf(stderr, "%sshsh: Allocation error%s\n", RED, RESET);
             exit(EXIT_FAILURE);
         }
     }
 
-    pthread_create(&input_thread, NULL, input_thread_function, &c);
+    pthread_create(&input_thread, NULL, input_thread_function, &current_user_input);
 
     while (1)
     {
@@ -66,18 +65,25 @@ read_line (char* b, int p, ENV* env, History* h)
         {
             ctrl_c_pressed = 0;
 
-            printf("\r> %s", buffer);
+            print_buffer(buffer);
             printf("^C\n");
 
             free(buffer);
             return NULL;
         }
 
-        if (c == '\t')
-        {
+        if (current_user_input == '\t')
+        {   // TODO! this need to be put into it's own function or simplified...
             char* completion = tab_completion(buffer, position, env);
 
             if (completion) {
+                int completion_len = strlen(completion);
+
+                if (completion_len > 0 && completion[completion_len - 1] == '/') {
+                    completion[completion_len - 1] = '\0';
+                    completion_len--;
+                }
+
                 char* last_part = strrchr(completion, '/');
                 if (last_part) {
                     last_part++;
@@ -90,105 +96,97 @@ read_line (char* b, int p, ENV* env, History* h)
                     char* remaining_part = last_part + common_len;
 
                     int remaining_len = strlen(remaining_part);
+
                     if (position < strlen(buffer)) {
-                        memmove(
-                            buffer + position + remaining_len, 
-                            buffer + position, 
-                            strlen(buffer) - position + 1
-                        );
+                        memmove(buffer + position + remaining_len, buffer + position, strlen(buffer) - position + 1);
                     }
 
                     strncpy(buffer + position, remaining_part, remaining_len);
 
                     position += remaining_len;
-                }
-            }
 
-            printf("\n");
-            pthread_join(input_thread, NULL);
-            return read_line(buffer, position, env, h);
+                    buffer[position] = ' ';
+                    position++; 
+                    buffer[position] = '\0'; 
+                }
+
+                pthread_join(input_thread, NULL);
+                return read_line(buffer, position, env, history, SKIP_CWD);
+            }
+            else 
+            {
+                printf("\n");
+                pthread_join(input_thread, NULL);
+                return read_line(buffer, position, env, history, 0);
+            }
         }
 
-        if (c == EOF || c == '\n')
+        if (current_user_input == EOF || current_user_input == '\n')
         {
             if (position == 0)
             {
-                goto next;
+                pthread_create(&input_thread, NULL, input_thread_function, &current_user_input);
+                continue;
             }
 
             printf("\n");
             return buffer;
         }
-        else if (c == 27)
+        else if (current_user_input == ESCAPE)
         {   // TODO! add ctrl + L/R Arrow handler to jump around whitespace
-            char o = (char) get_char();
-            if (o == 91)
+            char current_user_input_buffer = (char) get_char();
+            if (current_user_input_buffer == OPEN_BRACKET)
             {
-                int arrow_key = get_char();
-                switch (arrow_key)
+                int key = get_char();
+                
+                if(key == UP_ARROW || key == DOWN_ARROW || key == RIGHT_ARROW || key == LEFT_ARROW) 
                 {
-                    case UP_ARROW:
-                        handle_up_arrow(h->list, buffer, &local_history_idx, &position);
-                        break;
-                    case DOWN_ARROW:
-                        handle_down_arrow(h->list, buffer, &local_history_idx, &position, h->index);
-                        break;
-                    case RIGHT_ARROW:
-                        handle_right_arrow(&position, (int) strlen(buffer));
-                        break;
-                    case LEFT_ARROW:
-                        handle_left_arrow(&position);
-                        break;
+                    handle_arrow(key, history, buffer, &local_history_idx, &position);
                 }
             }
         } 
-        else if (c == CTRL_L)
+        else if (current_user_input == CTRL_L)
         {
             printf("\033[H\033[2J"); 
             printf("\n");
             fflush(stdout);
             system("pwd");
-            printf("\r> %s", buffer);
+            print_buffer(buffer);
         }
-        else if (c == BACKSPACE)
+        else if (current_user_input == BACKSPACE && position > 0)
         {
-            if (position > 0)
+            position--;
+            memmove(buffer + position, buffer + position + 1, strlen(buffer) - position);
+            
+            print_buffer(buffer);
+            
+            int len_after_cursor = (int) strlen(buffer) - position;
+            printf(" \b");
+            for (int i = 0; i < len_after_cursor; i++)
             {
-                position--;
-                memmove(buffer + position, buffer + position + 1, strlen(buffer) - position);
-                int len_after_cursor = (int) strlen(buffer) - position;
-
-                printf("\r> %s", buffer);
-                printf(" \b");
-                for (int i = 0; i < len_after_cursor; i++)
-                {
-                    printf("\b");
-                }
+                printf("\b");
             }
         }
         // TODO! add HOME/END key handler
-        else
+        else if (!ctrl_c_pressed)
         {   // Ran through all checks
-            if (!ctrl_c_pressed)
+            if (position < (int) strlen(buffer))
             {
-                if (position < (int) strlen(buffer))
-                {
-                    memmove(buffer + position + 1, buffer + position, strlen(buffer) - position + 1);
-                }
+                memmove(buffer + position + 1, buffer + position, strlen(buffer) - position + 1);
+            }
 
-                buffer[position] = (char) c;
-                position++;
-                printf("\r> %s", buffer);
+            buffer[position] = (char) current_user_input;
+            position++;
+            print_buffer(buffer);
 
-                int len_after_cursor = (int) strlen(buffer) - position;
-                for (int i = 0; i < len_after_cursor; i++)
-                {
-                    printf("\b");
-                }
+            int len_after_cursor = (int) strlen(buffer) - position;
+            for (int i = 0; i < len_after_cursor; i++)
+            {
+                printf("\b");
             }
         }
 
-        if (position >= buffsize - 1)
+        if (position + 1 >= buffsize - 1)
         {
             buffsize += 1024;
 
@@ -204,8 +202,7 @@ read_line (char* b, int p, ENV* env, History* h)
             buffer = tmp;
         }
 
-        next:
-        pthread_create(&input_thread, NULL, input_thread_function, &c);
+        pthread_create(&input_thread, NULL, input_thread_function, &current_user_input);
     }
 }
 
@@ -233,6 +230,26 @@ get_char (void)
 }
 
 void
+handle_arrow (int arrow_key, History* history, char* buffer, int* local_history_idx, int* position)
+{
+    switch (arrow_key)
+    {
+        case UP_ARROW:
+            handle_up_arrow(history->list, buffer, local_history_idx, position);
+            break;
+        case DOWN_ARROW:
+            handle_down_arrow(history->list, buffer, local_history_idx, position, history->index);
+            break;
+        case RIGHT_ARROW:
+            handle_right_arrow(position, (int) strlen(buffer));
+            break;
+        case LEFT_ARROW:
+            handle_left_arrow(position);
+            break;
+    }
+}
+
+void
 handle_up_arrow (char** list, char* buffer, int* local_history_idx, int* position)
 {
     if (*local_history_idx - 1 >= 0)
@@ -240,7 +257,7 @@ handle_up_arrow (char** list, char* buffer, int* local_history_idx, int* positio
         erase_buffer(*position);
         strcpy(buffer, list[--(*local_history_idx)]);
         *position = (int) strlen(buffer);
-        printf("\r> %s", buffer);
+        print_buffer(buffer);
     }
 }
 
@@ -252,7 +269,7 @@ handle_down_arrow (char** list, char* buffer, int* local_history_idx, int* posit
         erase_buffer(*position);
         strcpy(buffer, list[++(*local_history_idx)]);
         *position = (int) strlen(buffer);
-        printf("\r> %s", buffer);
+        print_buffer(buffer);
     }
 }
 
@@ -281,7 +298,9 @@ ctrlC_handler (int signum)
 {
     (void) signum;
 
+    pthread_mutex_lock(&ctrl_c_mutex);
     ctrl_c_pressed = 1;    
+    pthread_mutex_unlock(&ctrl_c_mutex);
 
     pthread_cancel(input_thread);
 }
@@ -302,22 +321,33 @@ tab_completion (char* partial_input, int pos, ENV* env)
 
     DTrie* d = env->path->dt;
     dtrie_search(d, partial_input);
+
     if (d->trie->matchesCount == 1)
     {
         return d->trie->matches[0];
     }
-    else if (d->trie->matchesCount != 0)
+    else if (d->trie->matchesCount == 0) 
     {
-        printf("\n");
-        for (int i = 0; i < d->trie->matchesCount; i++)
+        return NULL;
+    }
+    
+    printf("\n");
+    
+    for (int i = 0; i < d->trie->matchesCount; i++)
+    {
+        printf("%-25s", strrchr(d->trie->matches[i], '/') + 1);
+        if ((i + 1) % 3 == 0 && i != d->trie->matchesCount - 1)
         {
-            printf("%-25s", strrchr(d->trie->matches[i], '/') + 1);
-            if ((i + 1) % 3 == 0 && i != d->trie->matchesCount - 1)
-            {
-                printf("\n");
-            }
+            printf("\n");
         }
     }
 
     return NULL;
+}
+
+void 
+print_buffer (char* buffer) 
+{
+    printf("\r> %s", buffer);
+    fflush(stdout);
 }

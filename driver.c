@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <signal.h>
+#include <unistd.h>
 
 #include "dtrie.h"
 #include "env.h"
@@ -20,6 +21,7 @@ main (void)
     char* line;
     char** args;
     int status;
+    char cwd[256];
 
     /*
     TODO:
@@ -54,13 +56,14 @@ main (void)
         signal(SIGINT, ctrlC_handler);
         // signal(SIGWINCH, ...); // FIXME: SIGWINCH = resize handler
 
-        if (system("pwd"))
+        if (getcwd(cwd, sizeof(cwd)) == 0) 
         {
             return 1;
         }
-        printf("> ");
+        
+        printf("%s%s%s\n> ", RED, cwd, RESET);
 
-        line = read_line(NULL, 0, env, h);
+        line = read_line(NULL, 0, env, h, 0);
         args = split_line(line);
         status = shsh_execute(args, h);
 
